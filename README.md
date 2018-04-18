@@ -1,2 +1,1 @@
-# uc-sandbox
-Uncertainty SandBox
+# Sandbox for uncertainty modeling
