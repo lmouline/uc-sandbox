@@ -1,0 +1,105 @@
+COMPILER LucLanguage
+
+CHARACTERS
+
+letter = 'A'..'Z' + 'a'..'z'.
+nonZeroDigit = "123456789".
+digit = "0123456789".
+cr = '\r'.
+lf = '\n'.
+tab = '\t'.
+ff = '\f'.
+stringChar = ANY - "\"" - '\\' - cr - lf.
+
+
+TOKENS
+
+ident = letter {letter | digit}.
+stringLiteral = "\"" {stringChar} "\"".
+numericLiteral = "0" | nonZeroDigit { digit }.
+
+
+PRAGMAS
+
+COMMENTS FROM "/*" TO "*/"
+COMMENTS FROM "//" TO lf
+IGNORE cr + lf + tab + ff
+
+PRODUCTIONS
+
+
+
+LucLanguage
+=
+Statements
+{
+     Statements
+}
+.
+
+Statements = FunctionCall .
+
+
+FunctionCall =
+    ident                                               (. Token ident = this.currentToken; .)
+    Expression<out LucExpressionNode expr>              (. factory.addFctCall(ident, expr); .)
+    .
+
+Expression<out LucExpressionNode expr> =
+    LogicTerm<out expr>
+    {
+        "||"                                            (. Token op = this.currentToken; .)
+        LogicTerm<out LucExpressionNode right>          (. expr = factory.createBinary(expr, op, right); .)
+    }
+    .
+
+LogicTerm<out LucExpressionNode term> =
+    LogicFactor<out term>
+    {
+        "&&"                                            (. Token op = this.currentToken; .)
+        LogicFactor<out LucExpressionNode right>        (. term = factory.createBinary(term, op, right); .)
+    }
+    .
+
+LogicFactor<out LucExpressionNode factor> =
+    Arithmetic<out factor>
+    [
+        ("<" | "<=" | ">" | ">=" | "==" | "!=" )        (. Token op = this.currentToken; .)
+        Arithmetic<out LucExpressionNode right>         (. factor = factory.createBinary(factor, op, right); .)
+    ]
+    .
+
+Arithmetic<out LucExpressionNode arth> =
+    Term<out arth>
+    {
+        ("+" | "-")                                     (. Token op = this.currentToken; .)
+        Term<out LucExpressionNode right>               (. arth = factory.createBinary(arth, op, right); .)
+    }
+    .
+
+Term<out LucExpressionNode term> =
+    Factor<out term>
+    {
+        ("*" | "/")                                     (. Token op = this.currentToken; .)
+        Factor<out LucExpressionNode right>             (. term = factory.createBinary(term, op, right); .)
+    }
+    .
+
+Factor<out LucExpressionNode factor> =
+                                                        (. factor = null; .)
+    (
+        ident                                           (. factor = factory.createIdent(this.currentToken); .)
+        |
+        stringLiteral                                   (. factor = factory.createStringLiteral(this.currentToken); .)
+        |
+        numericLiteral                                  (. factor = factory.createNumLiteral(this.currentToken); .)
+        |
+        "("                                             (. int start = this.currentToken.charPos; .)
+            Expression<out LucExpressionNode result>    (. LucExpressionNode expr =  result; .)
+        ")"                                             (. int length = (this.currentToken.charPos + this.currentToken.val.length()) - start; .)
+                                                        (. factor = factory.createParenExpression(expr, start, length); .)
+    )
+    .
+
+
+END LucLanguage.
