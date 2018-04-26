@@ -1,5 +1,8 @@
 # Creos scenario - Simplified
 
+**Disclaimer:** The scenario has been simplified by applying only a percentage representation. 
+But we will complexify it during our progress.
+
 This scenario is based on the case study of a project between [SnT Luxembourg](https://wwwfr.uni.lu/snt) and [Creos Luxembourg S.A.](http://www.creos-net.lu/start.html).
 
 The network topology is mainly manually by Creos technician. 
@@ -11,7 +14,6 @@ It adds thus an incertainty on the state of the different fuses and it increases
 
 Without appropriate techniques to represent this uncertainty, it is either ignore or manually managed by a developper.
 Let us imagine that this uncertainty is manually managed.
-To simplify the scenario, we consider that the uncertainty is mainly represented using a percentage.
 The model will look like:
 
 ```
@@ -79,19 +81,38 @@ class ACommunicationMedia {
 class AWiredCommunicationMedia extends ACommunicationMedia {}
 
 class Cable extends AWiredCommunicationMedia {
-  att material : String
-  att size : String
-  att remark : String
-  att lmax : String
-  att electricalFeeding : String
-  att isConnected : Bool
-  ref startPoint : Fuse
+  att material: String
+  att ucMaterial: double
+
+  att size: String
+  att ucSize: double
+
+  att remark: String
+  att ucRemark: double
+
+  att lmax: String
+  att ucLmax: double
+
+  att electricalFeeding: String
+  att ucElectricalFeeding: double
+
+  att isConnected: Bool
+  att ucIsConnected: double
+
+  ref startPoint: Fuse
+  att ucStartPoint: double
+
   ref endPoint : Fuse
+  att ucEndPoint: double
 }
 
 class Cabinet {
   att name : String
-  att location : GPSPosition
+  att ucName: double
+
+  att location : String
+  att ucLocation: double
+  
   rel fuses : CabinetFuse oppositeOf cabinet
 }
 
