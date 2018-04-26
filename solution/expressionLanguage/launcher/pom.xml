@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ldas.uc.sandbox</groupId>
     <artifactId>launcher</artifactId>
+    <name>DUC :: Launcher</name>
 
     <dependencies>
         <dependency>
