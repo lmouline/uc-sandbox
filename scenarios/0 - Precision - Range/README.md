@@ -6,8 +6,8 @@ Using current solutions, a designer have to manually represents both values:
 
 ```
 class Sensor {
-    attribut value: double
-    attribut precision: double
+    att value: double
+    att precision: double
 }
 ```
 
@@ -45,7 +45,67 @@ function reasoning(s: Sensor) {
 
     // s == s2
     // we consider that 2 values are equals if it exists an overlap between two ranges
-    if(s2.value - s2.precision > s.value.sprecision && s.value + s.precision > s2.value + s2.precision ) {
+    if(s2.value - s2.precision > s.value - s.precision && s.value + s.precision > s2.value + s2.precision ) {
+        ...
+    }
+}
+```
+
+Using our solution:
+```
+class Sensor {
+    att value: Imprecise<double>
+}
+```
+
+The previous code will then looks like:
+```
+function reasoning(s: Sensor) {
+    // Compare to a threshold
+    // value > T
+    if(s.value > T) {
+        ...
+    }
+
+    // value < T
+    if(T > s.value) {
+        ...
+    }
+
+    // value == T
+    if(s.value == T) {
+        ...
+    }
+
+    var s2: Sensor
+    // Compare to another sensor value
+    //s > s2
+    if (s > s2) {
+        ...
+    }
+
+    //s < s2
+    if (s < s2) {
+       ... 
+    }
+
+    // s == s2
+    // we consider that 2 values are equals if it exists an overlap between two ranges
+    if(s == s2) {
+        ...
+    }
+}
+```
+
+If the engineer wants to access to the measured value or the precision, it could do so:
+
+```
+function reasoning(s: Sensor) {
+    if(s.value.value > T) {
+        ...
+    }
+
+     if(s.value.precision > T) {
         ...
     }
 }
