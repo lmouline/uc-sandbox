@@ -1,7 +1,7 @@
 # Percentage scenario
 
 A way to define the precision of a value is to define a value and its range based on a percentage: <value: v, percentage: p>.
-Using current solutions, a designer have to manually represents both values:
+Using current solutions, a designer has to manually represents both values:
 
 ```
 class Sensor {
@@ -14,7 +14,7 @@ When an engineer wants to use this value, he has to manually consider this preci
 
 ```
 function reasoning(s: Sensor) {
-    // Compare to a threshold
+    // compared to a threshold
     // value > T
     if(s.value * (1. + s.ucPercentage) > T) {
         ...
@@ -31,7 +31,7 @@ function reasoning(s: Sensor) {
     }
 
     var s2: Sensor
-    // Compare to another sensor value
+    // compared to another sensor value
     //s > s2
     if (s.value * (1. + s.ucPercentage) > s2.value * (1. + s2.ucPercentage)) {
         ...
@@ -43,7 +43,7 @@ function reasoning(s: Sensor) {
     }
 
     // s == s2
-    // we consider that 2 values are equals if it exists an overlap between two ranges
+    // we consider that 2 values are equal if it exists an overlap between two ranges
     if(s2.value * (1. - s2.ucPercentage) > s.value - * (1. - s.ucPercentage) && s.value * (1. + s.ucPercentage) > s2.value * (1. + s2.ucPercentage) ) {
         ...
     }
@@ -60,7 +60,7 @@ class Sensor {
 The previous code will then looks like:
 ```
 function reasoning(s: Sensor) {
-    // Compare to a threshold
+    // compared to a threshold
     // value > T
     if(s.value > T) {
         ...
@@ -77,7 +77,7 @@ function reasoning(s: Sensor) {
     }
 
     var s2: Sensor
-    // Compare to another sensor value
+    // compared to another sensor value
     //s > s2
     if (s > s2) {
         ...
@@ -89,7 +89,7 @@ function reasoning(s: Sensor) {
     }
 
     // s == s2
-    // we consider that 2 values are equals if it exists an overlap between two ranges
+    // we consider that 2 values are equal if it exists an overlap between two ranges
     if(s == s2) {
         ...
     }

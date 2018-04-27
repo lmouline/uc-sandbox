@@ -2,7 +2,7 @@
 
 Sensors have always a precision measurement due to their hardware.
 When a new value is measurement, the sensor can send it with the measurement precision: <value: v, precision: p>.
-Using current solutions, a designer have to manually represents both values:
+Using current solutions, a designer has to manually represents both values:
 
 ```
 class Sensor {

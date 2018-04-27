@@ -5,14 +5,14 @@ But we will complexify it during our progress.
 
 This scenario is based on the case study of a project between [SnT Luxembourg](https://wwwfr.uni.lu/snt) and [Creos Luxembourg S.A.](http://www.creos-net.lu/start.html).
 
-The network topology is mainly manually by Creos technician. 
-However, as every known, human errors are frequent.
+The network topology is mainly manually by Creos technicians. 
+However, as everyone knows, human errors are frequent.
 The stored network may not represent the real situation: the network topology is uncertain.
 Moreover, to connect or disconnect some cable, there is some cabinet with fuses. 
-These fuse are manually modified and the modification is also manually to the system.
-It adds thus an incertainty on the state of the different fuses and it increases the uncertainty on the network.
+These fuses are manually modified and the modification is also manually to the system.
+It adds thus an uncertainty on the state of the different fuses and it increases the uncertainty on the network.
 
-Without appropriate techniques to represent this uncertainty, it is either ignore or manually managed by a developper.
+Without appropriate techniques to represent this uncertainty, it is either ignore or manually managed by a developer.
 Let us imagine that this uncertainty is manually managed.
 The model will look like:
 
