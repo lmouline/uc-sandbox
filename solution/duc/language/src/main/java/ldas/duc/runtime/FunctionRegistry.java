@@ -91,7 +91,7 @@ public final class FunctionRegistry {
     }
 
     public void register(Source newFunctions) {
-        register(Parser.parseSL(language, newFunctions));
+        register(Parser.parse(language, newFunctions));
     }
 
     /**

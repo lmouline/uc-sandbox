@@ -137,7 +137,7 @@ public class Parser {
 -->initialization
     };
 
-    public static Map<String, RootCallTarget> parseSL(DucLanguage language, Source source) {
+    public static Map<String, RootCallTarget> parse(DucLanguage language, Source source) {
         Parser parser = new Parser(language, source);
         parser.Parse();
         if (parser.errors.errors.size() > 0) {

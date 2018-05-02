@@ -182,7 +182,7 @@ public final class DucLanguage extends TruffleLanguage<Context> {
          * the functions with the Context happens lazily in EvalRootNode.
          */
         if (request.getArgumentNames().isEmpty()) {
-            functions = Parser.parseSL(this, source);
+            functions = Parser.parse(this, source);
         } else {
             Source requestedSource = request.getSource();
             StringBuilder sb = new StringBuilder();
@@ -201,7 +201,7 @@ public final class DucLanguage extends TruffleLanguage<Context> {
 
             Source decoratedSource = Source.newBuilder(sb.toString()).language(language).mimeType(mimeType).name(
                             request.getSource().getName()).build();
-            functions = Parser.parseSL(this, decoratedSource);
+            functions = Parser.parse(this, decoratedSource);
         }
 
         RootCallTarget main = functions.get("main");
