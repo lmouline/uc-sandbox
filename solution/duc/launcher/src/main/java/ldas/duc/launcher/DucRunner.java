@@ -49,7 +49,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class SLMain {
+public final class DucRunner {
 
     private static final String DUC = "duc";
 
