@@ -27,6 +27,7 @@ def reasoning1(s1: Sensor, threshold: float):
         print("Incompatible: " + str(s1) + " and " + str(threshold))
 
 
+
 def reasoning2(s1: Sensor, s2: Sensor):
     if s1.value > s2.value:
         print(str(s1) + " > " + str(s2))
@@ -39,6 +40,20 @@ def reasoning2(s1: Sensor, s2: Sensor):
 
     else:
         print("Incompatible: " + str(s2) + " and " + str(s1))
+
+
+def propagation1(s1: Sensor, number: float):
+    print("Addition: " + str(s1) + " + " + str(number) + " = " + str(s1.value + number))
+    print("Subtraction: " + str(s1) + " - " + str(number) + " = " + str(s1.value - number))
+    print("Division: " + str(s1) + " / " + str(number) + " = " + str(s1.value / number))
+    print("Multiplication: " + str(s1) + " * " + str(number) + " = " + str(s1.value * number))
+
+
+def propagation2(s1: Sensor, s2: Sensor):
+    print("Addition: " + str(s1) + " + " + str(s2) + " = " + str(s1.value + s2.value))
+    print("Subtraction: " + str(s1) + " + " + str(s2) + " = " + str(s1.value - s2.value))
+    print("Division: " + str(s1) + " + " + str(s2) + " = " + str(s1.value / s2.value))
+    print("Multiplication: " + str(s1) + " + " + str(s2) + " = " + str(s1.value * s2.value))
 
 
 # Test between DUC value and a threshold
@@ -66,3 +81,11 @@ print()
 reasoning2(Sensor(5, 2), Sensor(4, 4))
 reasoning2(Sensor(5, 2), Sensor(6, 3))
 reasoning2(Sensor(5, 2), Sensor(5, 3))
+print()
+
+print()
+# Test propagation
+propagation1(Sensor(5, 0.3), 4)
+print()
+propagation2(Sensor(5, 0.3), Sensor(2, 0.2))
+

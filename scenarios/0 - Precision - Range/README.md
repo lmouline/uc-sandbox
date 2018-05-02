@@ -14,7 +14,7 @@ class Sensor {
 When an engineer wants to use this value, he has to manually consider this precision:
 
 ```
-function reasoning(s: Sensor) {
+function processing(s: Sensor) {
     // Compare to a threshold
     // value > T
     if(s.value + s.precision > T) {
@@ -60,7 +60,7 @@ class Sensor {
 
 The previous code will then looks like:
 ```
-function reasoning(s: Sensor) {
+function processing(s: Sensor) {
     // Compare to a threshold
     // value > T
     if(s.value > T) {
