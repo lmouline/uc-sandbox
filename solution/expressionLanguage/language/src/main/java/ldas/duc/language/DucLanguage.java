@@ -1,20 +1,20 @@
-package ldas.uc.sandbox.language;
+package ldas.duc.language;
 
 import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.interop.TruffleObject;
-import ldas.uc.sandbox.language.runtime.LucContext;
+import ldas.duc.language.runtime.DucContext;
 
-@TruffleLanguage.Registration(id = LucLanguage.ID, name = "Luc", version = "0.1", mimeType = LucLanguage.MIME_TYPE)
-public class LucLanguage extends TruffleLanguage<LucContext> {
+@TruffleLanguage.Registration(id = DucLanguage.ID, name = "Luc", version = "0.1", mimeType = DucLanguage.MIME_TYPE)
+public class DucLanguage extends TruffleLanguage<DucContext> {
 
 
     public static final String ID = "luc";
     public static final String MIME_TYPE = "application/x-sl";
 
     @Override
-    protected LucContext createContext(Env env) {
-        return new LucContext(env);
+    protected DucContext createContext(Env env) {
+        return new DucContext(env);
     }
 
     @Override

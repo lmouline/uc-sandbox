@@ -1,4 +1,4 @@
-package ldas.uc.sandbox.language.test;
+package ldas.duc.language.test;
 
 import org.junit.Test;
 

@@ -1,11 +1,11 @@
-package ldas.uc.sandbox.language.parser;
+package ldas.duc.language.parser;
 
 import com.oracle.truffle.api.TruffleException;
 import com.oracle.truffle.api.nodes.Node;
 
-public class LucParserError extends RuntimeException implements TruffleException{
+public class DucParserError extends RuntimeException implements TruffleException{
 
-    public LucParserError(String message) {
+    public DucParserError(String message) {
         super(message);
     }
 

@@ -1,4 +1,4 @@
-package ldas.uc.sandbox;
+package ldas.duc;
 
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.PolyglotException;
@@ -8,10 +8,10 @@ import org.graalvm.polyglot.Value;
 import java.io.File;
 import java.io.IOException;
 
-public class LucLauncher {
+public class DucLauncher {
 
 
-    private static final String LUC_LANG = "luc";
+    private static final String DUC_LANG = "luc";
 
 
     public static void main(String[] args) throws IOException {
@@ -19,8 +19,8 @@ public class LucLauncher {
             System.err.println("No file set as input.");
         }
         String file = args[0];
-        Source source = Source.newBuilder(LUC_LANG, new File(file)).build();
-        Context context = Context.newBuilder(LUC_LANG).in(System.in).out(System.out).build();
+        Source source = Source.newBuilder(DUC_LANG, new File(file)).build();
+        Context context = Context.newBuilder(DUC_LANG).in(System.in).out(System.out).build();
 
         try {
             Value result = context.eval(source);
