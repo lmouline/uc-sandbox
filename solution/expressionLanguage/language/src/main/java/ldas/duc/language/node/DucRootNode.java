@@ -7,15 +7,27 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.RootNode;
 import ldas.duc.language.DucLanguage;
 
-@NodeInfo(language = "Luc", description = "Root of Luc AST")
+/**
+ * Root node of the DUC Language
+ *
+ * It executed the first expression in the DUC script
+ *
+ */
+@NodeInfo(language = "Duc", description = "Root of Duc AST")
 public class DucRootNode extends RootNode {
 
-    public DucRootNode(DucLanguage language, FrameDescriptor frameDescriptor) {
+    @Child
+    private DucStatementNode firstStmt;
+
+
+    public DucRootNode(DucLanguage language, FrameDescriptor frameDescriptor, DucStatementNode stmt) {
         super(language, frameDescriptor);
+        this.firstStmt = stmt;
     }
 
     @Override
     public Object execute(VirtualFrame frame) {
-        return null;
+        assert getLanguage(DucLanguage.class).getContextReference().get() != null;
+        return firstStmt.execute(frame);
     }
 }

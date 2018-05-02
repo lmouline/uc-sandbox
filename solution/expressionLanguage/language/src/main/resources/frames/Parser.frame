@@ -138,7 +138,7 @@ public class Parser {
 -->initialization
     };
 
-    public static DucRootNode parseSL(DucLanguage language, Source source) {
+    public static DucRootNode parseDuc(DucLanguage language, Source source) {
         Parser parser = new Parser(language, source);
         parser.Parse();
         if (parser.errors.errors.size() > 0) {
