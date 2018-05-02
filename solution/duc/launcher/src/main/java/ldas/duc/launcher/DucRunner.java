@@ -40,22 +40,18 @@
  */
 package ldas.duc.launcher;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
+
 public final class SLMain {
 
-    private static final String SL = "sl";
+    private static final String DUC = "duc";
 
     /**
      * The main entry point.
@@ -76,10 +72,10 @@ public final class SLMain {
 
         if (file == null) {
             // @formatter:off
-            source = Source.newBuilder(SL, new InputStreamReader(System.in), "<stdin>").build();
+            source = Source.newBuilder(DUC, new InputStreamReader(System.in), "<stdin>").build();
             // @formatter:on
         } else {
-            source = Source.newBuilder(SL, new File(file)).build();
+            source = Source.newBuilder(DUC, new File(file)).build();
         }
 
         System.exit(executeSource(source, System.in, System.out, options));
@@ -88,7 +84,7 @@ public final class SLMain {
     private static int executeSource(Source source, InputStream in, PrintStream out, Map<String, String> options) {
         Context context;
         try {
-            context = Context.newBuilder(SL).in(in).out(out).options(options).build();
+            context = Context.newBuilder(DUC).in(in).out(out).options(options).build();
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
             return 1;
@@ -97,8 +93,8 @@ public final class SLMain {
 
         try {
             Value result = context.eval(source);
-            if (context.getBindings(SL).getMember("main") == null) {
-                System.err.println("No function main() defined in SL source file.");
+            if (context.getBindings(DUC).getMember("main") == null) {
+                System.err.println("No function main() defined in DUC source file.");
                 return 1;
             }
             if (!result.isNull()) {
