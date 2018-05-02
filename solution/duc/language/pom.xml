@@ -14,9 +14,9 @@
 
     <properties>
         <cocor.outdir.short>${project.build.directory}/generated-sources/cocor</cocor.outdir.short>
-        <cocor.outdir.full>${cocor.outdir.short}/ldas/duc/language/parser/</cocor.outdir.full>
+        <cocor.outdir.full>${cocor.outdir.short}/ldas/duc/parser/</cocor.outdir.full>
         <cocor.java>${basedir}/Coco.jar</cocor.java>
-        <cocor.grammar>${basedir}/src/main/resources/grammar/Duc.atg</cocor.grammar>
+        <cocor.grammar>${basedir}/src/main/resources/grammar/SimpleLanguage.atg</cocor.grammar>
         <cocor.frames>${basedir}/src/main/resources/frames</cocor.frames>
     </properties>
 
@@ -43,12 +43,12 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>com.oracle.truffle</groupId>-->
-            <!--<artifactId>truffle-tck</artifactId>-->
-            <!--<version>1.0.0-rc1</version>-->
-            <!--<scope>provided</scope>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.oracle.truffle</groupId>
+            <artifactId>truffle-tck</artifactId>
+            <version>1.0.0-rc1</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -96,6 +96,19 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <includes>
+                        <include>**/*TestSuite.java</include>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <argLine>-XX:-UseJVMCIClassLoader</argLine>
+                </configuration>
             </plugin>
         </plugins>
     </build>
