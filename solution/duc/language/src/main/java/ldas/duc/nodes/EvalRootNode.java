@@ -58,10 +58,10 @@ import java.util.Map;
  *
  * <ul>
  * <li>Lazily registration of functions on first execution. This fulfills the semantics of
- * "evaluating" source code in SL.</li>
- * <li>Conversion of arguments to types understood by SL. The SL source code can be evaluated from a
+ * "evaluating" source code in Duc.</li>
+ * <li>Conversion of arguments to types understood by Duc. The Duc source code can be evaluated from a
  * different language, i.e., the caller can be a node from a different language that uses types not
- * understood by SL.</li>
+ * understood by Duc.</li>
  * </ul>
  */
 public final class EvalRootNode extends RootNode {
@@ -109,7 +109,7 @@ public final class EvalRootNode extends RootNode {
             /* The source code did not have a "main" function, so nothing to execute. */
             return Null.SINGLETON;
         } else {
-            /* Conversion of arguments to types understood by SL. */
+            /* Conversion of arguments to types understood by Duc. */
             Object[] arguments = frame.getArguments();
             for (int i = 0; i < arguments.length; i++) {
                 arguments[i] = Context.fromForeignValue(arguments[i]);

@@ -53,11 +53,11 @@ import com.oracle.truffle.api.source.SourceSection;
 import java.io.File;
 
 /**
- * The base class of all Truffle nodes for SL. All nodes (even expressions) can be used as
+ * The base class of all Truffle nodes for Duc. All nodes (even expressions) can be used as
  * statements, i.e., without returning a value. The {@link VirtualFrame} provides access to the
  * local variables.
  */
-@NodeInfo(language = "SL", description = "The abstract base node for all SL statements")
+@NodeInfo(language = "Duc", description = "The abstract base node for all Duc statements")
 @GenerateWrapper
 @ReportPolymorphism
 public abstract class StatementNode extends Node implements InstrumentableNode {

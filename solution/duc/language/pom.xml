@@ -16,7 +16,7 @@
         <cocor.outdir.short>${project.build.directory}/generated-sources/cocor</cocor.outdir.short>
         <cocor.outdir.full>${cocor.outdir.short}/ldas/duc/parser/</cocor.outdir.full>
         <cocor.java>${basedir}/Coco.jar</cocor.java>
-        <cocor.grammar>${basedir}/src/main/resources/grammar/SimpleLanguage.atg</cocor.grammar>
+        <cocor.grammar>${basedir}/src/main/resources/grammar/Duc.atg</cocor.grammar>
         <cocor.frames>${basedir}/src/main/resources/frames</cocor.frames>
     </properties>
 

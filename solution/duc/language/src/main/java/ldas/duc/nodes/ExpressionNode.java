@@ -50,8 +50,8 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
 
 /**
- * Base class for all SL nodes that produce a value and therefore benefit from type specialization.
- * The annotation {@link TypeSystemReference} specifies the SL types. Specifying it here defines the
+ * Base class for all Duc nodes that produce a value and therefore benefit from type specialization.
+ * The annotation {@link TypeSystemReference} specifies the Duc types. Specifying it here defines the
  * type system for all subclasses.
  */
 @TypeSystemReference(Types.class)

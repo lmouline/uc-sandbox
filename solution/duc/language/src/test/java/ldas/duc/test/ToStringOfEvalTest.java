@@ -40,15 +40,13 @@
  */
 package ldas.duc.test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class ToStringOfEvalTest {
     Context context;
@@ -65,9 +63,9 @@ public class ToStringOfEvalTest {
 
     @Test
     public void checkToStringOnAFunction() {
-        context.eval("sl", "function checkName() {}");
-        Value value1 = context.getBindings("sl").getMember("checkName");
-        Value value2 = context.getBindings("sl").getMember("checkName");
+        context.eval("duc", "function checkName() {}");
+        Value value1 = context.getBindings("duc").getMember("checkName");
+        Value value2 = context.getBindings("duc").getMember("checkName");
 
         assertNotNull("Symbol is not null", value1);
         assertNotNull("Symbol is not null either", value2);

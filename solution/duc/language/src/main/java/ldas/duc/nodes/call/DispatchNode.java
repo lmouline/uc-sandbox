@@ -58,8 +58,8 @@ import com.oracle.truffle.api.nodes.DirectCallNode;
 import com.oracle.truffle.api.nodes.IndirectCallNode;
 import com.oracle.truffle.api.nodes.Node;
 import ldas.duc.nodes.Types;
-import ldas.duc.nodes.interop.ForeignToSLTypeNode;
-import ldas.duc.nodes.interop.ForeignToSLTypeNodeGen;
+import ldas.duc.nodes.interop.ForeignToDucTypeNode;
+import ldas.duc.nodes.interop.ForeignToDucTypeNodeGen;
 import ldas.duc.runtime.Function;
 import ldas.duc.runtime.UndefinedNameException;
 
@@ -75,13 +75,13 @@ public abstract class DispatchNode extends Node {
      * Inline cached specialization of the dispatch.
      *
      * <p>
-     * Since SL is a quite simple language, the benefit of the inline cache seems small: after
+     * Since Duc is a quite simple language, the benefit of the inline cache seems small: after
      * checking that the actual function to be executed is the same as the cachedFuntion, we can
      * safely execute the cached call target. You can reasonably argue that caching the call target
      * is overkill, since we could just retrieve it via {@code function.getCallTarget()}. However,
      * caching the call target and using a {@link DirectCallNode} allows Truffle to perform method
      * inlining. In addition, in a more complex language the lookup of the call target is usually
-     * much more complicated than in SL.
+     * much more complicated than in Duc.
      * </p>
      *
      * <p>
@@ -153,13 +153,13 @@ public abstract class DispatchNode extends Node {
                     // The child node to call the foreign function
                     @Cached("createCrossLanguageCallNode(arguments)") Node crossLanguageCallNode,
                     // The child node to convert the result of the foreign call to a SL value
-                    @Cached("createToSLTypeNode()") ForeignToSLTypeNode toSLTypeNode) {
+                    @Cached("createToDucTypeNode()") ForeignToDucTypeNode toDucTypeNode) {
 
         try {
             /* Perform the foreign function call. */
             Object res = ForeignAccess.sendExecute(crossLanguageCallNode, function, arguments);
-            /* Convert the result to a SL value. */
-            return toSLTypeNode.executeConvert(res);
+            /* Convert the result to a Duc value. */
+            return toDucTypeNode.executeConvert(res);
 
         } catch (ArityException | UnsupportedTypeException | UnsupportedMessageException e) {
             /* Foreign access was not successful. */
@@ -175,7 +175,7 @@ public abstract class DispatchNode extends Node {
         return Message.createExecute(arguments.length).createNode();
     }
 
-    protected static ForeignToSLTypeNode createToSLTypeNode() {
-        return ForeignToSLTypeNodeGen.create();
+    protected static ForeignToDucTypeNode createToDucTypeNode() {
+        return ForeignToDucTypeNodeGen.create();
     }
 }

@@ -40,8 +40,6 @@
  */
 package ldas.duc.test;
 
-import java.io.IOException;
-
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Source;
@@ -50,12 +48,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+
 public class ParseErrorTest {
     private Context context;
 
     @Before
     public void setUp() {
-        context = Context.create("sl");
+        context = Context.create("duc");
     }
 
     @After
@@ -66,7 +66,7 @@ public class ParseErrorTest {
     @Test
     public void testParseError() throws IOException {
         try {
-            final Source src = Source.newBuilder("sl", "function testSyntaxError(a) {break;} function main() {return testSyntaxError;}", "testSyntaxError.sl").build();
+            final Source src = Source.newBuilder("duc", "function testSyntaxError(a) {break;} function main() {return testSyntaxError;}", "testSyntaxError.duc").build();
             context.eval(src);
             Assert.assertTrue("Should not reach here.", false);
         } catch (PolyglotException e) {

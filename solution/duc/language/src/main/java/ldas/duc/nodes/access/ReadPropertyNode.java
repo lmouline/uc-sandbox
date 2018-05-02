@@ -46,7 +46,7 @@ import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.object.DynamicObject;
 import ldas.duc.nodes.ExpressionNode;
-import ldas.duc.nodes.interop.ForeignToSLTypeNode;
+import ldas.duc.nodes.interop.ForeignToDucTypeNode;
 import ldas.duc.runtime.Context;
 import ldas.duc.runtime.UndefinedNameException;
 
@@ -83,7 +83,7 @@ public abstract class ReadPropertyNode extends ExpressionNode {
                     // The child node to access the foreign object
                     @Cached("READ.createNode()") Node foreignReadNode,
                     // The child node to convert the result of the foreign read to a SL value
-                    @Cached("create()") ForeignToSLTypeNode toSLTypeNode) {
+                    @Cached("create()") ForeignToDucTypeNode toSLTypeNode) {
 
         try {
             /* Perform the foreign object access. */

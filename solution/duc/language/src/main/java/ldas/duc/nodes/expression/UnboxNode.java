@@ -51,7 +51,7 @@ import com.oracle.truffle.api.interop.TruffleObject;
 import com.oracle.truffle.api.nodes.Node;
 import ldas.duc.DucException;
 import ldas.duc.nodes.ExpressionNode;
-import ldas.duc.nodes.interop.ForeignToSLTypeNode;
+import ldas.duc.nodes.interop.ForeignToDucTypeNode;
 import ldas.duc.runtime.BigNumber;
 import ldas.duc.runtime.Function;
 import ldas.duc.runtime.Null;
@@ -92,7 +92,7 @@ public abstract class UnboxNode extends ExpressionNode {
     @Specialization(guards = "isBoxedPrimitive(value)")
     protected Object unboxBoxed(
                     Object value,
-                    @Cached("create()") ForeignToSLTypeNode foreignToSL) {
+                    @Cached("create()") ForeignToDucTypeNode foreignToSL) {
         return foreignToSL.unbox((TruffleObject) value);
     }
 

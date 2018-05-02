@@ -52,7 +52,7 @@ import ldas.duc.runtime.Null;
 import java.math.BigInteger;
 
 /**
- * The type system of SL, as explained in {@link SLLanguage}. Based on the {@link TypeSystem}
+ * The type system of Duc, as explained in {@link DucLanguage}. Based on the {@link TypeSystem}
  * annotation, the Truffle DSL generates the subclass {@link TypesGen} with type test and type
  * conversion methods for all types. In this class, we only cover types where the automatically
  * generated ones would not be sufficient.
@@ -84,7 +84,7 @@ public abstract class Types {
 
     /**
      * Informs the Truffle DSL that a primitive {@code long} value can be used in all
-     * specializations where a {@link BigNumber} is expected. This models the semantic of SL: It
+     * specializations where a {@link BigNumber} is expected. This models the semantic of Duc: It
      * only has an arbitrary precision Number type (implemented as {@link BigNumber}, and
      * {@code long} is only used as a performance optimization to avoid the costly
      * {@link BigNumber} arithmetic for values that fit into a 64-bit primitive value.

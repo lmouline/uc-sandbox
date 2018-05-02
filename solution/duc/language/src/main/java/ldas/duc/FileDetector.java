@@ -47,7 +47,7 @@ import java.nio.file.spi.FileTypeDetector;
 public final class FileDetector extends FileTypeDetector {
     @Override
     public String probeContentType(Path path) throws IOException {
-        if (path.getFileName().toString().endsWith(".sl")) {
+        if (path.getFileName().toString().endsWith(".Duc")) {
             return DucLanguage.MIME_TYPE;
         }
         return null;

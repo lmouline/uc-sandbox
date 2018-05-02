@@ -40,20 +40,6 @@
  */
 package ldas.duc.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.PolyglotException.StackFrame;
@@ -65,13 +51,19 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import static org.junit.Assert.*;
+
 public class DucExceptionTest {
 
     private Context ctx;
 
     @Before
     public void setUp() {
-        this.ctx = Context.create("sl");
+        this.ctx = Context.create("duc");
     }
 
     @After
@@ -105,7 +97,7 @@ public class DucExceptionTest {
     private void assertException(boolean failImmediately, String source, String... expectedFrames) {
         boolean initialExecute = true;
         try {
-            Value value = ctx.eval("sl", source);
+            Value value = ctx.eval("duc", source);
             initialExecute = false;
             if (failImmediately) {
                 Assert.fail("Should not reach here.");
@@ -126,7 +118,7 @@ public class DucExceptionTest {
         for (StackFrame frame : e.getPolyglotStackTrace()) {
             if (i < expectedFrames.length && expectedFrames[i] != null) {
                 Assert.assertTrue(frame.isGuestFrame());
-                Assert.assertEquals("sl", frame.getLanguage().getId());
+                Assert.assertEquals("duc", frame.getLanguage().getId());
                 Assert.assertEquals(expectedFrames[i], frame.getRootName());
                 Assert.assertTrue(frame.getSourceLocation() != null);
                 firstHostFrame = true;
@@ -145,7 +137,7 @@ public class DucExceptionTest {
         boolean initialExecute = true;
         RuntimeException[] exception = new RuntimeException[1];
         try {
-            Value value = ctx.eval("sl", source);
+            Value value = ctx.eval("duc", source);
             initialExecute = false;
             ProxyExecutable proxy = (args) -> {
                 throw exception[0] = new RuntimeException();
@@ -165,15 +157,15 @@ public class DucExceptionTest {
             String source = "function bar() { x = 1 / \"asdf\"; }\n" +
                             "function foo() { return bar(); }\n" +
                             "function main() { foo(); }";
-            ctx.eval(Source.newBuilder("sl", source, "script.sl").buildLiteral());
+            ctx.eval(Source.newBuilder("duc", source, "script.duc").buildLiteral());
             fail();
         } catch (PolyglotException e) {
             assertTrue(e.isGuestException());
 
             Iterator<StackFrame> frames = e.getPolyglotStackTrace().iterator();
-            assertGuestFrame(frames, "sl", "bar", "script.sl", 21, 31);
-            assertGuestFrame(frames, "sl", "foo", "script.sl", 59, 64);
-            assertGuestFrame(frames, "sl", "main", "script.sl", 86, 91);
+            assertGuestFrame(frames, "duc", "bar", "script.duc", 21, 31);
+            assertGuestFrame(frames, "duc", "foo", "script.duc", 59, 64);
+            assertGuestFrame(frames, "duc", "main", "script.duc", 86, 91);
             assertHostFrame(frames, Context.class.getName(), "eval");
             assertHostFrame(frames, DucExceptionTest.class.getName(), "testGuestLanguageError");
 
@@ -215,7 +207,7 @@ public class DucExceptionTest {
 
     @Test
     public void testProxyGuestLanguageStack() {
-        Value bar = ctx.eval("sl", "function foo(f) { f(); } function bar(f) { return foo(f); } function main() { return bar; }");
+        Value bar = ctx.eval("duc", "function foo(f) { f(); } function bar(f) { return foo(f); } function main() { return bar; }");
 
         TestProxy proxy = new TestProxy(3, bar);
         try {
@@ -239,15 +231,15 @@ public class DucExceptionTest {
         Iterator<StackFrame> frames = e.getPolyglotStackTrace().iterator();
         assertHostFrame(frames, TestProxy.class.getName(), "execute");
         for (int i = 0; i < 2; i++) {
-            assertGuestFrame(frames, "sl", "foo", "Unnamed", 18, 21);
-            assertGuestFrame(frames, "sl", "bar", "Unnamed", 50, 56);
+            assertGuestFrame(frames, "duc", "foo", "Unnamed", 18, 21);
+            assertGuestFrame(frames, "duc", "bar", "Unnamed", 50, 56);
 
             assertHostFrame(frames, Value.class.getName(), "execute");
             assertHostFrame(frames, TestProxy.class.getName(), "execute");
         }
 
-        assertGuestFrame(frames, "sl", "foo", "Unnamed", 18, 21);
-        assertGuestFrame(frames, "sl", "bar", "Unnamed", 50, 56);
+        assertGuestFrame(frames, "duc", "foo", "Unnamed", 18, 21);
+        assertGuestFrame(frames, "duc", "bar", "Unnamed", 50, 56);
 
         assertHostFrame(frames, Value.class.getName(), "execute");
         assertHostFrame(frames, DucExceptionTest.class.getName(), "testProxyGuestLanguageStack");

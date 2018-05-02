@@ -1,0 +1,4 @@
+function main() {  
+  eval("duc", "function foo() { return 14 + 2; }");
+  println(foo());
+}

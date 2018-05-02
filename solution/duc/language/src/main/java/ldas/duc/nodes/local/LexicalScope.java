@@ -68,7 +68,7 @@ public final class LexicalScope {
     private Map<String, FrameSlot> varSlots;
 
     /**
-     * Create a new block SL lexical scope.
+     * Create a new block Duc lexical scope.
      *
      * @param current the current node
      * @param block a nearest block enclosing the current node
@@ -82,7 +82,7 @@ public final class LexicalScope {
     }
 
     /**
-     * Create a new functional SL lexical scope.
+     * Create a new functional Duc lexical scope.
      *
      * @param current the current node, or <code>null</code> when it would be above the block
      * @param block a nearest block enclosing the current node
@@ -102,8 +102,8 @@ public final class LexicalScope {
             // We're in the root.
             block = findChildrenBlock(node);
             if (block == null) {
-                // Corrupted SL AST, no block was found
-                assert node.getRootNode() instanceof EvalRootNode : "Corrupted SL AST under " + node;
+                // Corrupted Duc AST, no block was found
+                assert node.getRootNode() instanceof EvalRootNode : "Corrupted Duc AST under " + node;
                 return new LexicalScope(null, null, (BlockNode) null);
             }
             node = null; // node is above the block

@@ -51,8 +51,8 @@ import ldas.duc.runtime.Function;
 import ldas.duc.runtime.Null;
 
 /**
- * SL does not need a sophisticated error checking and reporting mechanism, so all unexpected
- * conditions just abort execution. This exception class is used when we abort from within the SL
+ * Duc does not need a sophisticated error checking and reporting mechanism, so all unexpected
+ * conditions just abort execution. This exception class is used when we abort from within the Duc
  * implementation.
  */
 public class DucException extends RuntimeException implements TruffleException {
@@ -78,7 +78,7 @@ public class DucException extends RuntimeException implements TruffleException {
     }
 
     /**
-     * Provides a user-readable message for run-time type errors. SL is strongly typed, i.e., there
+     * Provides a user-readable message for run-time type errors. Duc is strongly typed, i.e., there
      * are no automatic type conversions of values.
      */
     @TruffleBoundary

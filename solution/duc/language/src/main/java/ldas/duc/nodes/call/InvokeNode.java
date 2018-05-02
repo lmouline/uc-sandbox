@@ -49,7 +49,7 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 import ldas.duc.nodes.ExpressionNode;
 
 /**
- * The node for function invocation in SL. Since SL has first class functions, the {@link SLFunction
+ * The node for function invocation in Duc. Since Duc has first class functions, the {@link DucFunction
  * target function} can be computed by an arbitrary expression. This node is responsible for
  * evaluating this expression, as well as evaluating the {@link #argumentNodes arguments}. The
  * actual dispatch is then delegated to a chain of {@link DispatchNode} that form a polymorphic

@@ -49,8 +49,8 @@ import ldas.duc.nodes.access.ReadPropertyCacheNodeGen;
 import ldas.duc.nodes.access.WritePropertyCacheNode;
 import ldas.duc.nodes.call.DispatchNode;
 import ldas.duc.nodes.call.DispatchNodeGen;
-import ldas.duc.nodes.interop.ForeignToSLTypeNode;
-import ldas.duc.nodes.interop.ForeignToSLTypeNodeGen;
+import ldas.duc.nodes.interop.ForeignToDucTypeNode;
+import ldas.duc.nodes.interop.ForeignToDucTypeNodeGen;
 
 /**
  * The class containing all message resolution implementations of an SL object.
@@ -64,8 +64,8 @@ public class ObjectMessageResolution {
     public abstract static class SLForeignWriteNode extends Node {
 
         @Child private WritePropertyCacheNode write = WritePropertyCacheNodeGen.create();
-        @Child private ForeignToSLTypeNode nameToSLType = ForeignToSLTypeNodeGen.create();
-        @Child private ForeignToSLTypeNode valueToSLType = ForeignToSLTypeNodeGen.create();
+        @Child private ForeignToDucTypeNode nameToSLType = ForeignToDucTypeNodeGen.create();
+        @Child private ForeignToDucTypeNode valueToSLType = ForeignToDucTypeNodeGen.create();
 
         public Object access(DynamicObject receiver, Object name, Object value) {
             Object convertedName = nameToSLType.executeConvert(name);
@@ -86,7 +86,7 @@ public class ObjectMessageResolution {
     public abstract static class SLForeignReadNode extends Node {
 
         @Child private ReadPropertyCacheNode read = ReadPropertyCacheNodeGen.create();
-        @Child private ForeignToSLTypeNode nameToSLType = ForeignToSLTypeNodeGen.create();
+        @Child private ForeignToDucTypeNode nameToSLType = ForeignToDucTypeNodeGen.create();
 
         public Object access(DynamicObject receiver, Object name) {
             Object convertedName = nameToSLType.executeConvert(name);
@@ -106,7 +106,7 @@ public class ObjectMessageResolution {
     @Resolve(message = "REMOVE")
     public abstract static class SLForeignRemoveNode extends Node {
 
-        @Child private ForeignToSLTypeNode nameToSLType = ForeignToSLTypeNodeGen.create();
+        @Child private ForeignToDucTypeNode nameToSLType = ForeignToDucTypeNodeGen.create();
 
         public Object access(DynamicObject receiver, Object name) {
             Object convertedName = nameToSLType.executeConvert(name);

@@ -50,12 +50,12 @@ import ldas.duc.DucLanguage;
 import ldas.duc.nodes.controlflow.FunctionBodyNode;
 
 /**
- * The root of all SL execution trees. It is a Truffle requirement that the tree root extends the
+ * The root of all Duc execution trees. It is a Truffle requirement that the tree root extends the
  * class {@link RootNode}. This class is used for both builtin and user-defined functions. For
- * builtin functions, the {@link #bodyNode} is a subclass of {@link SLBuiltinNode}. For user-defined
+ * builtin functions, the {@link #bodyNode} is a subclass of {@link DucBuiltinNode}. For user-defined
  * functions, the {@link #bodyNode} is a {@link FunctionBodyNode}.
  */
-@NodeInfo(language = "SL", description = "The root of all SL execution trees")
+@NodeInfo(language = "Duc", description = "The root of all Duc execution trees")
 public class DucRootNode extends RootNode {
     /** The function body that is executed, and specialized during execution. */
     @Child private ExpressionNode bodyNode;

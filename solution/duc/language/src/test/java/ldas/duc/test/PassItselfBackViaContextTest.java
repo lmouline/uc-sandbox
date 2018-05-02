@@ -90,8 +90,8 @@ public class PassItselfBackViaContextTest {
         myObj = new MyObj();
         context = Context.create();
         context.getPolyglotBindings().putMember("myObj", myObj);
-        context.eval("sl", "function main() {\n" + "  return import(\"myObj\");\n" + "}\n");
-        myObjWrapped = context.getBindings("sl").getMember("main").execute();
+        context.eval("duc", "function main() {\n" + "  return import(\"myObj\");\n" + "}\n");
+        myObjWrapped = context.getBindings("duc").getMember("main").execute();
         assertFalse(myObjWrapped.isNull());
         myObjCall = myObjWrapped.as(CallWithValue.class);
     }
