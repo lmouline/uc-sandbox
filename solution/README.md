@@ -157,4 +157,67 @@ struct BStruct {}
 
 ```
 
+## How to use
+
+### Requirements
+
+- [GraalVM v.1.0.0 RC1](https://www.graalvm.org/)
+
+**WARNING:** The installation of GraalVM may/will change:
+    - your default `java` version
+    - your default `npm`/`node` version
+They will both point to the GraalVM ones.
+I personnaly use [jenv](http://www.jenv.be/) to manage the current java version.
+For node, I switch to the default one.
+
+Your `JAVA_HOME` should point to the GraalVM one.
+
+Here what I have **(notice the Java home in that point to the GraalVM one)**:
+
+```
+$java -version
+
+java version "1.8.0_161"
+Java(TM) SE Runtime Environment (build 1.8.0_161-b12)
+GraalVM 1.0.0-rc1 (build 25.71-b01-internal-jvmci-0.42, mixed mode)
+
+$mvn -version
+Maven home: /usr/local/apache-maven-3.3.3
+Java version: 1.8.0_161, vendor: Oracle Corporation
+Java home: /Library/GraalVM/graalvm-1.0.0-rc1/Contents/Home/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "mac os x", version: "10.13.4", arch: "x86_64", family: "mac"
+```
+
+
+### How to install it
+
+1. Clone the repository
+2. Run `mvn clean install`
+
+It will create a `language-1.0-SNAPSHOT.jar` file to add in your classpath to use it.
+
+### How to compile a DUC file
+
+You can use the `ldas.duc.launcher.DucRunner` contained in `lancher-1.0-SNAPSHOT-jar.jar`.
+
+**Example**
+From `solution/duc` folder:
+
+```
+$java -Dtruffle.class.path.append=./language/target/language-1.0-SNAPSHOT.jar -jar ./launcher/target/launcher-1.0-SNAPSHOT-jar.jar ./language/src/test/resources/HelloWorld.duc
+== running on org.graalvm.polyglot.Engine@5d22bbb7
+Hello World!
+```
+
+### How to configure your IDE
+
+- Set GraalVM as the project SDK *(check your IDE documentation to do so)*
+
+Enjoy :)
+
+
+
+
+
 
