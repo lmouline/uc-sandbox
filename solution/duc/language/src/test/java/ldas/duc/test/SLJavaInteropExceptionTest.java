@@ -40,7 +40,7 @@
  */
 package ldas.duc.test;
 
-import ldas.duc.SLLanguage;
+import ldas.duc.DucLanguage;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Source;
@@ -68,9 +68,9 @@ public class SLJavaInteropExceptionTest {
             String sourceText = "function test(validator) {\n" +
                             "  return validator.validateException();\n" +
                             "}";
-            try (Context context = Context.newBuilder(SLLanguage.ID).build()) {
-                context.eval(Source.newBuilder(SLLanguage.ID, sourceText, "Test").build());
-                Value test = context.getBindings(SLLanguage.ID).getMember("test");
+            try (Context context = Context.newBuilder(DucLanguage.ID).build()) {
+                context.eval(Source.newBuilder(DucLanguage.ID, sourceText, "Test").build());
+                Value test = context.getBindings(DucLanguage.ID).getMember("test");
                 test.execute(Validator.this);
             }
         }
@@ -89,9 +89,9 @@ public class SLJavaInteropExceptionTest {
         String sourceText = "function test(validator) {\n" +
                         "  return validator.validateException();\n" +
                         "}";
-        try (Context context = Context.newBuilder(SLLanguage.ID).build()) {
-            context.eval(Source.newBuilder(SLLanguage.ID, sourceText, "Test").build());
-            Value test = context.getBindings(SLLanguage.ID).getMember("test");
+        try (Context context = Context.newBuilder(DucLanguage.ID).build()) {
+            context.eval(Source.newBuilder(DucLanguage.ID, sourceText, "Test").build());
+            Value test = context.getBindings(DucLanguage.ID).getMember("test");
             try {
                 test.execute(new Validator());
                 fail("expected a PolyglotException but did not throw");
@@ -108,9 +108,9 @@ public class SLJavaInteropExceptionTest {
         String sourceText = "function test(validator) {\n" +
                         "  return validator.validateNested();\n" +
                         "}";
-        try (Context context = Context.newBuilder(SLLanguage.ID).build()) {
-            context.eval(Source.newBuilder(SLLanguage.ID, sourceText, "Test").build());
-            Value test = context.getBindings(SLLanguage.ID).getMember("test");
+        try (Context context = Context.newBuilder(DucLanguage.ID).build()) {
+            context.eval(Source.newBuilder(DucLanguage.ID, sourceText, "Test").build());
+            Value test = context.getBindings(DucLanguage.ID).getMember("test");
             try {
                 test.execute(new Validator());
                 fail("expected a PolyglotException but did not throw");
@@ -139,9 +139,9 @@ public class SLJavaInteropExceptionTest {
                         "function test(validator) {\n" +
                         "  return validator." + javaMethod + "(supplier);\n" +
                         "}";
-        try (Context context = Context.newBuilder(SLLanguage.ID).build()) {
-            context.eval(Source.newBuilder(SLLanguage.ID, sourceText, "Test").build());
-            Value test = context.getBindings(SLLanguage.ID).getMember("test");
+        try (Context context = Context.newBuilder(DucLanguage.ID).build()) {
+            context.eval(Source.newBuilder(DucLanguage.ID, sourceText, "Test").build());
+            Value test = context.getBindings(DucLanguage.ID).getMember("test");
             try {
                 test.execute(new Validator());
                 fail("expected a PolyglotException but did not throw");
@@ -169,9 +169,9 @@ public class SLJavaInteropExceptionTest {
                         "function test(validator) {\n" +
                         "  return validator." + javaMethod + "(new());\n" +
                         "}";
-        try (Context context = Context.newBuilder(SLLanguage.ID).build()) {
-            context.eval(Source.newBuilder(SLLanguage.ID, sourceText, "Test").build());
-            Value test = context.getBindings(SLLanguage.ID).getMember("test");
+        try (Context context = Context.newBuilder(DucLanguage.ID).build()) {
+            context.eval(Source.newBuilder(DucLanguage.ID, sourceText, "Test").build());
+            Value test = context.getBindings(DucLanguage.ID).getMember("test");
             test.execute(new Validator());
         }
     }

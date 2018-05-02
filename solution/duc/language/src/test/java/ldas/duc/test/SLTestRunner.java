@@ -41,8 +41,8 @@
 package ldas.duc.test;
 
 import com.oracle.truffle.api.dsl.NodeFactory;
-import ldas.duc.SLLanguage;
-import ldas.duc.builtins.SLBuiltinNode;
+import ldas.duc.DucLanguage;
+import ldas.duc.builtins.BuiltinNode;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Source;
@@ -262,9 +262,9 @@ public class SLTestRunner extends ParentRunner<SLTestRunner.TestCase> {
         return outFile.toString();
     }
 
-    private static final List<NodeFactory<? extends SLBuiltinNode>> builtins = new ArrayList<>();
+    private static final List<NodeFactory<? extends BuiltinNode>> builtins = new ArrayList<>();
 
-    public static void installBuiltin(NodeFactory<? extends SLBuiltinNode> builtin) {
+    public static void installBuiltin(NodeFactory<? extends BuiltinNode> builtin) {
         builtins.add(builtin);
     }
 
@@ -275,8 +275,8 @@ public class SLTestRunner extends ParentRunner<SLTestRunner.TestCase> {
         Context context = null;
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            for (NodeFactory<? extends SLBuiltinNode> builtin : builtins) {
-                SLLanguage.installBuiltin(builtin);
+            for (NodeFactory<? extends BuiltinNode> builtin : builtins) {
+                DucLanguage.installBuiltin(builtin);
             }
 
             context = Context.newBuilder().in(new ByteArrayInputStream(testCase.testInput.getBytes("UTF-8"))).out(out).build();
@@ -299,7 +299,7 @@ public class SLTestRunner extends ParentRunner<SLTestRunner.TestCase> {
     private static void run(Context context, Path path, PrintWriter out) throws IOException {
         try {
             /* Parse the SL source file. */
-            Source source = Source.newBuilder(SLLanguage.ID, path.toFile()).interactive(true).build();
+            Source source = Source.newBuilder(DucLanguage.ID, path.toFile()).interactive(true).build();
 
             /* Call the main entry point, without any arguments. */
             context.eval(source);

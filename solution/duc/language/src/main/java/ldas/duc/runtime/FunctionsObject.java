@@ -55,7 +55,7 @@ import java.util.Set;
 
 class FunctionsObject implements TruffleObject {
 
-    final Map<String, SLFunction> functions = new HashMap<>();
+    final Map<String, Function> functions = new HashMap<>();
 
     FunctionsObject() {
     }

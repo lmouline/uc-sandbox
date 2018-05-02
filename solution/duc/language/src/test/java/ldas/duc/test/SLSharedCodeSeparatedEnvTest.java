@@ -42,7 +42,7 @@ package ldas.duc.test;
 
 import com.oracle.truffle.api.instrumentation.EventBinding;
 import com.oracle.truffle.api.instrumentation.TruffleInstrument;
-import ldas.duc.SLLanguage;
+import ldas.duc.DucLanguage;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.Instrument;
@@ -73,7 +73,7 @@ public class SLSharedCodeSeparatedEnvTest {
         os1 = new ByteArrayOutputStream();
         os2 = new ByteArrayOutputStream();
 
-        int instances = SLLanguage.counter;
+        int instances = DucLanguage.counter;
         // @formatter:off
         e1 = Context.newBuilder("sl").engine(engine).out(os1).build();
         e1.getPolyglotBindings().putMember("extra", 1);
@@ -81,7 +81,7 @@ public class SLSharedCodeSeparatedEnvTest {
         e2.getPolyglotBindings().putMember("extra", 2);
         e1.initialize("sl");
         e2.initialize("sl");
-        assertEquals("One SLLanguage instance created", instances + 1, SLLanguage.counter);
+        assertEquals("One DucLanguage instance created", instances + 1, DucLanguage.counter);
     }
 
     @After

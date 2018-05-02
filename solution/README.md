@@ -7,6 +7,8 @@ For example, in Java it will result in a new framework in which new data types o
 However, to implement a PoC, we needed a language that we could extend as required.
 This is the main purpose of the DUC language.
 
+DUC Language has been built by modifying the SimpleLanguage provided by [Oracle Labs](https://github.com/graalvm/simplelanguage).
+
 ## Base language
 
 TBD.

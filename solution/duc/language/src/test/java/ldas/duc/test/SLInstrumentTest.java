@@ -52,7 +52,7 @@ import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.SourceSection;
 import com.oracle.truffle.tck.DebuggerTester;
-import ldas.duc.runtime.SLBigNumber;
+import ldas.duc.runtime.BigNumber;
 import org.graalvm.polyglot.*;
 import org.junit.Assume;
 import org.junit.Test;
@@ -717,7 +717,7 @@ public class SLInstrumentTest {
         }
         assertTrue(interopFailure);
 
-        earlyReturn.returnValue = new SLBigNumber(new BigInteger("-42"));
+        earlyReturn.returnValue = new BigNumber(new BigInteger("-42"));
         ret = context.eval(source);
         assertTrue(ret.isNumber());
         assertEquals(-41L, ret.asLong());

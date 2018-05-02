@@ -95,24 +95,24 @@ identifier                                      (. Token identifierToken = t; .)
     }
 ]
 ")"
-Block<out SLStatementNode body, false>          (. factory.finishFunction(body); .)
+Block<out StatementNode body, false>          (. factory.finishFunction(body); .)
 .
 
 
 
-Block<out SLStatementNode result, boolean inLoop>
+Block<out StatementNode result, boolean inLoop>
 =                                               (. factory.startBlock();
-                                                   List<SLStatementNode> body = new ArrayList<>(); .)
+                                                   List<StatementNode> body = new ArrayList<>(); .)
 "{"                                             (. int start = t.charPos; .)
 {
-    Statement<out SLStatementNode s, inLoop>    (. body.add(s); .)
+    Statement<out StatementNode s, inLoop>    (. body.add(s); .)
 }
 "}"                                             (. int length = (t.charPos + t.val.length()) - start; .)
                                                 (. result = factory.finishBlock(body, start, length); .)
 .
 
 
-Statement<out SLStatementNode result, boolean inLoop>
+Statement<out StatementNode result, boolean inLoop>
 =                                               (. result = null; .)
 (
     WhileStatement<out result>
@@ -135,23 +135,23 @@ Statement<out SLStatementNode result, boolean inLoop>
 .
 
 
-WhileStatement<out SLStatementNode result>
+WhileStatement<out StatementNode result>
 =
 "while"                                         (. Token whileToken = t; .)
 "("
-Expression<out SLExpressionNode condition>
+Expression<out ExpressionNode condition>
 ")"
-Block<out SLStatementNode body, true>           (. result = factory.createWhile(whileToken, condition, body); .)
+Block<out StatementNode body, true>           (. result = factory.createWhile(whileToken, condition, body); .)
 .
 
 
-IfStatement<out SLStatementNode result, boolean inLoop>
+IfStatement<out StatementNode result, boolean inLoop>
 =
 "if"                                            (. Token ifToken = t; .)
 "("
-Expression<out SLExpressionNode condition>
+Expression<out ExpressionNode condition>
 ")"
-Block<out SLStatementNode thenPart, inLoop>     (. SLStatementNode elsePart = null; .)
+Block<out StatementNode thenPart, inLoop>     (. StatementNode elsePart = null; .)
 [
     "else"
     Block<out elsePart, inLoop>
@@ -159,10 +159,10 @@ Block<out SLStatementNode thenPart, inLoop>     (. SLStatementNode elsePart = nu
 .
 
 
-ReturnStatement<out SLStatementNode result>
+ReturnStatement<out StatementNode result>
 =
 "return"                                        (. Token returnToken = t;
-                                                   SLExpressionNode value = null; .)
+                                                   ExpressionNode value = null; .)
 [
     Expression<out value>
 ]                                               (. result = factory.createReturn(returnToken, value); .)
@@ -170,60 +170,60 @@ ReturnStatement<out SLStatementNode result>
 .
 
 
-Expression<out SLExpressionNode result>
+Expression<out ExpressionNode result>
 =
 LogicTerm<out result>
 {
     "||"                                        (. Token op = t; .)
-    LogicTerm<out SLExpressionNode right>       (. result = factory.createBinary(op, result, right); .)
+    LogicTerm<out ExpressionNode right>       (. result = factory.createBinary(op, result, right); .)
 }
 .
 
 
-LogicTerm<out SLExpressionNode result>
+LogicTerm<out ExpressionNode result>
 =
 LogicFactor<out result>
 {
     "&&"                                        (. Token op = t; .)
-    LogicFactor<out SLExpressionNode right>     (. result = factory.createBinary(op, result, right); .)
+    LogicFactor<out ExpressionNode right>     (. result = factory.createBinary(op, result, right); .)
 }
 .
 
 
-LogicFactor<out SLExpressionNode result>
+LogicFactor<out ExpressionNode result>
 =
 Arithmetic<out result>
 [
     ("<" | "<=" | ">" | ">=" | "==" | "!=" )    (. Token op = t; .)
-    Arithmetic<out SLExpressionNode right>      (.  result = factory.createBinary(op, result, right); .)
+    Arithmetic<out ExpressionNode right>      (.  result = factory.createBinary(op, result, right); .)
 ]
 .
 
 
-Arithmetic<out SLExpressionNode result>
+Arithmetic<out ExpressionNode result>
 =
 Term<out result>
 {
     ("+" | "-")                                 (. Token op = t; .)
-    Term<out SLExpressionNode right>            (. result = factory.createBinary(op, result, right); .)
+    Term<out ExpressionNode right>            (. result = factory.createBinary(op, result, right); .)
 }
 .
 
 
-Term<out SLExpressionNode result>
+Term<out ExpressionNode result>
 =
 Factor<out result>
 {
     ("*" | "/")                                 (. Token op = t; .)
-    Factor<out SLExpressionNode right>          (. result = factory.createBinary(op, result, right); .)
+    Factor<out ExpressionNode right>          (. result = factory.createBinary(op, result, right); .)
 }
 .
 
 
-Factor<out SLExpressionNode result>
+Factor<out ExpressionNode result>
 =                                               (. result = null; .)
 (
-    identifier                                  (. SLExpressionNode assignmentName = factory.createStringLiteral(t, false); .)
+    identifier                                  (. ExpressionNode assignmentName = factory.createStringLiteral(t, false); .)
     (
         MemberExpression<out result, null, null, assignmentName>
     |
@@ -235,20 +235,20 @@ Factor<out SLExpressionNode result>
     numericLiteral                              (. result = factory.createNumericLiteral(t); .)
 |
     "("                                         (. int start = t.charPos; .)
-    Expression<out result>                      (. SLExpressionNode expr = result; .)
+    Expression<out result>                      (. ExpressionNode expr = result; .)
     ")"                                         (. int length = (t.charPos + t.val.length()) - start; .)
                                                 (. result = factory.createParenExpression(expr, start, length); .)
 )
 .
 
 
-MemberExpression<out SLExpressionNode result, SLExpressionNode r, SLExpressionNode assignmentReceiver, SLExpressionNode assignmentName>
+MemberExpression<out ExpressionNode result, ExpressionNode r, ExpressionNode assignmentReceiver, ExpressionNode assignmentName>
 =                                               (. result = null;
-                                                   SLExpressionNode receiver = r;
-                                                   SLExpressionNode nestedAssignmentName = null; .)
+                                                   ExpressionNode receiver = r;
+                                                   ExpressionNode nestedAssignmentName = null; .)
 (
-    "("                                         (. List<SLExpressionNode> parameters = new ArrayList<>();
-                                                   SLExpressionNode parameter;
+    "("                                         (. List<ExpressionNode> parameters = new ArrayList<>();
+                                                   ExpressionNode parameter;
                                                    if (receiver == null) {
                                                        receiver = factory.createRead(assignmentName); 
                                                    } .)
@@ -263,7 +263,7 @@ MemberExpression<out SLExpressionNode result, SLExpressionNode r, SLExpressionNo
                                                 (. result = factory.createCall(receiver, parameters, finalToken); .)
 |
     "="
-    Expression<out SLExpressionNode value>      (. if (assignmentName == null) {
+    Expression<out ExpressionNode value>      (. if (assignmentName == null) {
                                                        SemErr("invalid assignment target");
                                                    } else if (assignmentReceiver == null) {
                                                        result = factory.createAssignment(assignmentName, value);

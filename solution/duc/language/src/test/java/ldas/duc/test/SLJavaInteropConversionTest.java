@@ -40,7 +40,7 @@
  */
 package ldas.duc.test;
 
-import ldas.duc.SLLanguage;
+import ldas.duc.DucLanguage;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
@@ -104,9 +104,9 @@ public class SLJavaInteropConversionTest {
                         "  obj.b = new();\n" +
                         "  return validator.validateObject(obj, obj);\n" +
                         "}";
-        try (Context context = Context.newBuilder(SLLanguage.ID).build()) {
-            context.eval(Source.newBuilder(SLLanguage.ID, sourceText, "Test").build());
-            Value test = context.getBindings(SLLanguage.ID).getMember("test");
+        try (Context context = Context.newBuilder(DucLanguage.ID).build()) {
+            context.eval(Source.newBuilder(DucLanguage.ID, sourceText, "Test").build());
+            Value test = context.getBindings(DucLanguage.ID).getMember("test");
             Value res = test.execute(new Validator());
             assertTrue(res.isNumber() && res.asInt() == 42);
         }
@@ -120,9 +120,9 @@ public class SLJavaInteropConversionTest {
                         "  obj.b = new();\n" +
                         "  return validator.validateMap(obj, obj);\n" +
                         "}";
-        try (Context context = Context.newBuilder(SLLanguage.ID).build()) {
-            context.eval(Source.newBuilder(SLLanguage.ID, sourceText, "Test").build());
-            Value test = context.getBindings(SLLanguage.ID).getMember("test");
+        try (Context context = Context.newBuilder(DucLanguage.ID).build()) {
+            context.eval(Source.newBuilder(DucLanguage.ID, sourceText, "Test").build());
+            Value test = context.getBindings(DucLanguage.ID).getMember("test");
             Value res = test.execute(new Validator());
             assertTrue(res.isNumber() && res.asInt() == 42);
         }
@@ -135,9 +135,9 @@ public class SLJavaInteropConversionTest {
                         "  array[1] = new();\n" +
                         "  return validator.validateList(array, array);\n" +
                         "}";
-        try (Context context = Context.newBuilder(SLLanguage.ID).build()) {
-            context.eval(Source.newBuilder(SLLanguage.ID, sourceText, "Test").build());
-            Value test = context.getBindings(SLLanguage.ID).getMember("test");
+        try (Context context = Context.newBuilder(DucLanguage.ID).build()) {
+            context.eval(Source.newBuilder(DucLanguage.ID, sourceText, "Test").build());
+            Value test = context.getBindings(DucLanguage.ID).getMember("test");
             Value res = test.execute(new Validator(), new Object[2]);
             assertTrue(res.isNumber() && res.asInt() == 42);
         }

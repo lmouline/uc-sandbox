@@ -30,9 +30,9 @@ package ldas.duc.parser;
 
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.source.Source;
-import ldas.duc.SLLanguage;
-import ldas.duc.nodes.SLExpressionNode;
-import ldas.duc.nodes.SLStatementNode;
+import ldas.duc.DucLanguage;
+import ldas.duc.nodes.ExpressionNode;
+import ldas.duc.nodes.StatementNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,11 +52,11 @@ public class Parser {
 
     public final Scanner scanner;
     public final Errors errors;
-    private final SLNodeFactory factory;
+    private final NodeFactory factory;
     -->declarations
-    public Parser(SLLanguage language, Source source) {
+    public Parser(DucLanguage language, Source source) {
         this.scanner = new Scanner(source.getInputStream());
-        this.factory = new SLNodeFactory(language, source);
+        this.factory = new NodeFactory(language, source);
         errors = new Errors();
     }
 
@@ -137,7 +137,7 @@ public class Parser {
 -->initialization
     };
 
-    public static Map<String, RootCallTarget> parseSL(SLLanguage language, Source source) {
+    public static Map<String, RootCallTarget> parseSL(DucLanguage language, Source source) {
         Parser parser = new Parser(language, source);
         parser.Parse();
         if (parser.errors.errors.size() > 0) {
@@ -146,7 +146,7 @@ public class Parser {
                 msg.append(error.message).append("\n");
             }
             final Errors.ErrorDescription desc = parser.errors.errors.get(0);
-            throw new SLParseError(
+            throw new ParseError(
                     source,
                     desc.line,
                     desc.column,
