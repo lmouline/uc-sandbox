@@ -14,17 +14,18 @@ It adds thus an uncertainty on the state of the different fuses and it increases
 
 Without appropriate techniques to represent this uncertainty, it is either ignore or manually managed by a developer.
 Let us imagine that this uncertainty is manually managed.
-The model will look like:
+
+## Without UC Abstraction solution
 
 ```
 class AEntity {
-  att name: String
+  att name: string
   att ucName: double
 
-  att communicationActive: Bool
+  att communicationActive: bool
   att ucCommActive: double
   
-  att location: String
+  att location: string
   att ucLocation: double
 
   rel communicationMedias: ACommunicationMedia oppositeOf entities
@@ -35,7 +36,7 @@ class AEntity {
 }
 
 class AMeter extends AEntity {
-  att serialNumber : String
+  att serialNumber : string
   att ucSerialNumber: double
 }
 
@@ -45,7 +46,7 @@ class Concentrator extends AEntity {
 }
 
 class SmartMeter extends AMeter {
-  att electricityActive: Bool
+  att electricityActive: bool
   att ucElectricityActive: double
 
   att distance : int
@@ -54,25 +55,25 @@ class SmartMeter extends AMeter {
   att hops : int
   att ucHops: double
 
-  ref routingNode: AEntity
+  rel routingNode: AEntity
   att ucRoutingNode: double
 
-  ref cable: Cable
+  rel cable: Cable
   att ucCable: double
 }
 
 class GasMeter extends AMeter {
-  att gasActive : Bool
+  att gasActive : bool
   att ucGasActive: double
 }
 
 class WaterMeter extends AMeter {
-  att waterActive : Bool
+  att waterActive : bool
   att ucWaterActive: double
 }
 
 class ACommunicationMedia {
-  att cableID : String
+  att cableID : string
   att ucCableID: double
 
   rel entities : AEntity oppositeOf communicationMedias
@@ -81,36 +82,36 @@ class ACommunicationMedia {
 class AWiredCommunicationMedia extends ACommunicationMedia {}
 
 class Cable extends AWiredCommunicationMedia {
-  att material: String
+  att material: string
   att ucMaterial: double
 
-  att size: String
+  att size: string
   att ucSize: double
 
-  att remark: String
+  att remark: string
   att ucRemark: double
 
-  att lmax: String
+  att lmax: string
   att ucLmax: double
 
-  att electricalFeeding: String
+  att electricalFeeding: string
   att ucElectricalFeeding: double
 
-  att isConnected: Bool
+  att isConnected: bool
   att ucIsConnected: double
 
-  ref startPoint: Fuse
+  rel startPoint: Fuse
   att ucStartPoint: double
 
-  ref endPoint : Fuse
+  rel endPoint : Fuse
   att ucEndPoint: double
 }
 
 class Cabinet {
-  att name : String
+  att name : string
   att ucName: double
 
-  att location : String
+  att location : string
   att ucLocation: double
   
   rel fuses : CabinetFuse oppositeOf cabinet
@@ -118,93 +119,211 @@ class Cabinet {
 
 // If we want UC on each edge, we need an intermediate class 
 class CabinetFuse {
-    ref cabinet: Cabinet oppositeof fuses
-    ref fuse: Fuse oppositeof cabinet
+    rel cabinet: Cabinet oppositeof fuses
+    rel fuse: Fuse oppositeof cabinet
 
     att ucRelation: double
 
 }
 
 class Fuse {
-  att closed : Bool
+  att closed : bool
   att ucCloded: double
 
-  ref cabinet : CabinetFuse oppositeOf fuse
+  rel cabinet : CabinetFuse oppositeOf fuse
 
   ref cable : Cable
   att ucCable: double
 }
 ```
 
-Using our approach:
+## With our solution
+
+**Generic** approach:
 
 ```
 class AEntity {
-  att name: UncertainPerc<String>
-  att communicationActive: UncertainPerc<Bool>
-  att location: UncertainPerc<String>
-  rel communicationMedias: UncertainGlobal<ACommunicationMedia> oppositeOf entities
-  rel communicationHubOf : UncertainGlobal<AEntity>
+  att name: Unconfident<string>
+  att communicationActive: Unconfident<bool>
+  att location: Unconfident<string>
+  rel communicationMedias: Unconfident<ACommunicationMedia> oppositeOf entities
+  rel communicationHubOf : Unconfident<AEntity>
 }
 
 class AMeter extends AEntity {
-  att serialNumber : UncertainPerc<String>
+  att serialNumber : Unconfident<string>
 }
 
 class Concentrator extends AEntity {
-  att consumption: UncertainPerc<double>
+  att consumption: Unconfident<double>
 }
 
 class SmartMeter extends AMeter {
-  att electricityActive: UncertainPerc<Bool>
-  att distance : UncertainPerc<int>
-  att hops : UncertainPerc<int>
+  att electricityActive: Unconfident<bool>
+  att distance : Unconfident<int>
+  att hops : Unconfident<int>
 
-  ref routingNode: Uncertain<AEntity>
-  ref cable: Uncertain<Cable>
+  rel routingNode: Unconfident<AEntity>
+  rel cable: Unconfident<Cable>
 }
 
 class GasMeter extends AMeter {
-  att gasActive : UncertainPerc<Bool>
+  att gasActive : Unconfident<bool>
 }
 
 class WaterMeter extends AMeter {
-  att waterActive : UncertainPerc<Bool>
+  att waterActive : Unconfident<bool>
 }
 
 class ACommunicationMedia {
-  att cableID : UncertainPerc<String>
+  att cableID : Unconfident<string>
 
-  rel entities : UncertainGlobal<AEntity> oppositeOf communicationMedias
+  rel entities : Unconfident<AEntity> oppositeOf communicationMedias
 }
 
 class AWiredCommunicationMedia extends ACommunicationMedia {}
 
 class Cable extends AWiredCommunicationMedia {
-  att material : UncertainPerc<String>
-  att size : UncertainPerc<String>
-  att remark : UncertainPerc<String>
-  att lmax : UncertainPerc<String>
-  att electricalFeeding : UncertainPerc<String>
-  att isConnected : UncertainPerc<Bool>
-  ref startPoint : Uncertain<Fuse>
-  ref endPoint : Uncertain<Fuse>
+  att material : Unconfident<string>
+  att size : Unconfident<string>
+  att remark : Unconfident<string>
+  att lmax : Unconfident<string>
+  att electricalFeeding : Unconfident<string>
+  att isConnected : Unconfident<bool>
+  rel startPoint : Unconfident<Fuse>
+  rel endPoint : Unconfident<Fuse>
 }
 
 class Cabinet {
-  att name : UncertainPerc<String>
-  att location : UncertainPerc<String>
-  rel fuses : Uncertain<Fuse> oppositeOf cabinet
+  att name : Unconfident<string>
+  att location : Unconfident<string>
+
+  @Uncertainty(value = "onEach")
+  rel fuses : Unconfident<Fuse> oppositeOf cabinet
 }
 
 class Fuse {
-  att closed : Bool
-  att ucCloded: double
+  att closed : Unconfident<bool>
 
-  ref cabinet : Uncertain<Cabinet> oppositeOf fuse
+  @Uncertainty(value = "onEach")
+  rel cabinet : Unconfident<Cabinet> oppositeOf fuses
 
-  ref cable : Uncertain<Cable>
+  rel cable : Unconfident<Cable>
 }
 ```
 
+**Extension of property definition**:
 
+```
+class AEntity {
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt name: string
+
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt communicationActive: bool
+
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt location: string
+
+  @UCRepresentation(name = "ConfidentPerc")
+  urel communicationMedias: ACommunicationMedia oppositeOf entities
+
+  @UCRepresentation(name = "ConfidentPerc")
+  urel communicationHubOf : AEntity
+}
+
+class AMeter extends AEntity {
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt serialNumber : string
+}
+
+class Concentrator extends AEntity {
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt consumption: double
+}
+
+class SmartMeter extends AMeter {
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt electricityActive: bool
+
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt distance: int
+
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt hops: int
+
+  @UCRepresentation(name = "ConfidentPerc")
+  urel routingNode: AEntity
+
+  @UCRepresentation(name = "ConfidentPerc")
+  urel cable: Cable
+}
+
+class GasMeter extends AMeter {
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt gasActive : bool
+}
+
+class WaterMeter extends AMeter {
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt waterActive : bool
+}
+
+class ACommunicationMedia {
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt cableID : string
+
+  @UCRepresentation(name = "ConfidentPerc")
+  urel entities : AEntity oppositeOf communicationMedias
+}
+
+class AWiredCommunicationMedia extends ACommunicationMedia {}
+
+class Cable extends AWiredCommunicationMedia {
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt material : string
+
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt size : string
+
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt remark : string
+
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt lmax : string
+
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt electricalFeeding : string
+
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt isConnected : bool
+
+  @UCRepresentation(name = "ConfidentPerc")
+  urel startPoint : Fuse
+
+  @UCRepresentation(name = "ConfidentPerc")
+  urel endPoint : Fuse
+}
+
+class Cabinet {
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt name : string
+
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt location : string
+
+  @UCRepresentation(name = "ConfidencePerc", param = "onEach" )
+  urel fuses : Fuse oppositeOf cabinet
+}
+
+class Fuse {
+  @UCRepresentation(name = "ConfidentPerc")
+  uatt closed: bool
+
+  @UCRepresentation(name = "ConfidencePerc", param = "onEach" )
+  urel cabinet: Cabinet oppositeOf fuses
+
+  @UCRepresentation(name = "ConfidencePerc")
+  urel cable: Unconfident<Cable>
+}
+```

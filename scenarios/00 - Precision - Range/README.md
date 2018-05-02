@@ -2,7 +2,9 @@
 
 Sensors have always a precision measurement due to their hardware.
 When a new value is measurement, the sensor can send it with the measurement precision: <value: v, precision: p>.
-Using current solutions, a designer has to manually represents both values:
+Using current solutions, a designer has to manually represents both values.
+
+## Without UC Abstraction solution
 
 ```
 struct Sensor {
@@ -14,7 +16,7 @@ struct Sensor {
 When an engineer wants to use this value, he has to manually consider this precision:
 
 ```
-function processing(s: Sensor) {
+function processing(s: Sensor, T: double, s2: Sensor) {
     // Compare to a threshold
     // value > T
     if(s.value + s.precision > T) {
@@ -31,7 +33,6 @@ function processing(s: Sensor) {
         ...
     }
 
-    var s2: Sensor
     // Compare to another sensor value
     //s > s2
     if (s.value + s.precision > s2.value + s2.precision) {
@@ -51,15 +52,16 @@ function processing(s: Sensor) {
 }
 ```
 
-Using our solution.
-1:
+## With our solution
+
+**Generic** approach:
 ```
 struct Sensor {
     att value: Unprecise<double>
 }
 ```
 
-2:
+**Extension of property definition**:
 ```
 struct Sensor {
     @UCRepresentation(name = "Precision")
@@ -67,9 +69,9 @@ struct Sensor {
 }
 ```
 
-The previous code will then looks like:
+The previous code will then look like:
 ```
-function processing(s: Sensor) {
+function processing(s: Sensor, T: double, s2: Sensor) {
     // Compare to a threshold
     // value > T
     if(s.value > T) {
@@ -109,7 +111,7 @@ function processing(s: Sensor) {
 If the engineer wants to access to the measured value or the precision, it could do so:
 
 ```
-function reasoning(s: Sensor) {
+function processing(s: Sensor) {
     if(s.value.value > T) {
         ...
     }

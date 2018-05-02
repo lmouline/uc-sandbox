@@ -1,7 +1,9 @@
-# Percentage scenario
+# Confidence scenario
 
-A way to define the precision of a value is to define a value and a confidence percentage: <value: v, percentage: p>.
-Using current solutions, a designer has to manually represents both values:
+A way to define the uncertainty of a value is to define a value and a confidence percentage: <value: v, percentage: p>.
+Using current solutions, a designer has to manually represents both values.
+
+## Without UC Abstraction solution
 
 ```
 struct Sensor {
@@ -13,7 +15,7 @@ struct Sensor {
 When an engineer wants to use this value, he has to manually consider this confidence:
 
 ```
-function reasoning(s: Sensor) {
+function processing(s: Sensor, T: double, s2: Sensor) {
     // compared to a threshold
     // value > T
     if(s.confidence > 0.8 && s.value > T) {
@@ -51,15 +53,16 @@ function reasoning(s: Sensor) {
 }
 ```
 
-Using our solution.
-1:
+## With our solution
+
+**Generic** approach:
 ```
 struct Sensor {
     att value: Unconfident<double>
 }
 ```
 
-2:
+**Extension of property definition**:
 ```
 struct Sensor {
     @UCRepresentation(name = "ConfidencePercentage")
@@ -69,7 +72,7 @@ struct Sensor {
 
 The previous code will then looks like:
 ```
-function reasoning(s: Sensor) {
+function processing(s: Sensor, T: double, s2: Sensor) {
     // compared to a threshold
     // value > T
     if(s.value.confidence > 80 && s.value > T) {
@@ -108,7 +111,7 @@ function reasoning(s: Sensor) {
 If the engineer wants to access to the measured value or the precision, it could do so:
 
 ```
-function reasoning(s: Sensor) {
+function processing(s: Sensor) {
     if(s.value.value > T) {
         ...
     }

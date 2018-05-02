@@ -117,8 +117,9 @@ struct BStruct {}
 
 ## Extension of property definition
 
-The global idea here is to define a new kind of property: a property is not only defined by its value but also by the set of metadata.
-By default, a property is thus defined by:
+The global idea here is to define a new kind of property: uncertainty property.
+Current definition of properties is mainly implemented by its value and its type.
+An uncertainty property is also defined by a set of metadata:
 
 - either an atribute or a relation (i.e., a reference or a collection of references)
 - a relation / a set of relations to store the consistency relationship(s) (e.g., a List<?>)
@@ -129,6 +130,8 @@ By default, a property is thus defined by:
 - a set of relations to store the domain knowledge
 
 Then, based on the current list of uncertain representation, we can either defined a list of new keyword or using annoted properties.
+
+Here, we choose to combined both: defined a new kind of properties (`uatt` and `urel`) and to add some annotation to precise the chosen uncertainty representation.
 
 
 Example (based on GCM):
@@ -144,7 +147,7 @@ struct AStruct {
     @UCRepresentation(name = "ConfidencePerc")
     urel b: BStruct
 
-    @UCRepresentation(name = "ConfidencePerc", )
+    @UCRepresentation(name = "ConfidencePerc", param = "onEach" )
     urel b: BStruct
 }
 
