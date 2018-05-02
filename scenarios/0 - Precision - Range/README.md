@@ -5,7 +5,7 @@ When a new value is measurement, the sensor can send it with the measurement pre
 Using current solutions, a designer has to manually represents both values:
 
 ```
-class Sensor {
+struct Sensor {
     att value: double
     att precision: double
 }
@@ -51,10 +51,19 @@ function processing(s: Sensor) {
 }
 ```
 
-Using our solution:
+Using our solution.
+1:
 ```
-class Sensor {
-    att value: Imprecise<double>
+struct Sensor {
+    att value: Unprecise<double>
+}
+```
+
+2:
+```
+struct Sensor {
+    @UCRepresentation(name = "Precision")
+    uatt value: double
 }
 ```
 
@@ -80,18 +89,18 @@ function processing(s: Sensor) {
     var s2: Sensor
     // Compare to another sensor value
     //s > s2
-    if (s > s2) {
+    if (s.value > s2.value) {
         ...
     }
 
     //s < s2
-    if (s < s2) {
+    if (s.value < s2.value) {
        ... 
     }
 
     // s == s2
     // we consider that 2 values are equals if it exists an overlap between two ranges
-    if(s == s2) {
+    if(s.value == s2.value) {
         ...
     }
 }

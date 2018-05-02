@@ -14,7 +14,7 @@ TBD.
 
 ```
 struct AStruct {
-    var aVar: double
+    att aVar: double
 
     rel b: BStruct
 }
@@ -100,8 +100,8 @@ Example (based on GCM language):
 ```
 
 struct AStruct {
-    var myVar: UncertainGaussFunc<T>
-    var myVar2: Unconfident<double[]>
+    att myVar: UncertainGaussFunc<T>
+    att myVar2: Unconfident<double[]>
 
     rel b: ConfidencePerc<BStruct>
 
@@ -136,10 +136,10 @@ Example (based on GCM):
 
 struct AStruct {
     @UCRepresentation(name = "GaussianFunction")
-    uvar myVar: double
+    uatt myVar: double
 
     @UCRepresentation(name = "ConfidentPerc")
-    uvar myVar2: double[]
+    uatt myVar2: double[]
 
     @UCRepresentation(name = "ConfidencePerc")
     urel b: BStruct
