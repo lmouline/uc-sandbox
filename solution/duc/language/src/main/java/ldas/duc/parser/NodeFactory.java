@@ -540,6 +540,18 @@ public class NodeFactory {
         return result;
     }
 
+    public ExpressionNode createVarDcl(ExpressionNode assignmentName, String type) {
+        String varName = ((StringLiteralNode)assignmentName).executeGeneric(null);
+        FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(varName);
+        lexicalScope.locals.put(varName, frameSlot);
+
+        final ExpressionNode result = null;
+
+
+
+        return result;
+    }
+
     /**
      * Creates source description of a single token.
      */

@@ -1,7 +1,7 @@
-function double(x) {
+function computeDouble(x) {
   return 2 * x;
 }
 
 function main() {
-  5 + double(2) = 4;
+  5 + computeDouble(2) = 4;
 }

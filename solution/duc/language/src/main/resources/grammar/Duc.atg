@@ -232,9 +232,40 @@ Factor<out ExpressionNode result>
     Expression<out result>                      (. ExpressionNode expr = result; .)
     ")"                                         (. int length = (t.charPos + t.val.length()) - start; .)
                                                 (. result = factory.createParenExpression(expr, start, length); .)
+|
+    "var"
+    identifier                                  (. ExpressionNode assignmentName = factory.createStringLiteral(t, false); .)
+    ":"
+    TypeDeclaration<out String typeDcl>                (. result = factory.createVarDcl(assignmentName, typeDcl); .)
 )
 .
 
+TypeDeclaration<out String result>
+=                                               (. result = null; .)
+(
+    PrimitiveTypeDcl<out result>
+    |
+    identifier                                  (. result = t.val; .)
+)
+.
+
+
+PrimitiveTypeDcl<out String result> =
+                                                (. result = null; .)
+(
+    "string"                                    (. result = PrimitiveType.STRING;.)
+|
+    "double"                                    (. result = PrimitiveType.DOUBLE;.)
+|
+    "long"                                      (. result = PrimitiveType.LONG;.)
+|
+    "int"                                       (. result = PrimitiveType.INT;.)
+|
+    "bool"                                      (. result = PrimitiveType.BOOL;.)
+|
+    "char"                                      (. result = PrimitiveType.CHAR;.)
+)
+.
 
 MemberExpression<out ExpressionNode result, ExpressionNode r, ExpressionNode assignmentReceiver, ExpressionNode assignmentName>
 =                                               (. result = null;

@@ -24,13 +24,16 @@ struct AStruct {
 struct BStruct{}
 
 function complexFunc(x: int, y: int): double {
-    return (x + y) * 0.2
+    return (x + y) * 0.2;
 }
 
-var a: AStruct = AStruct()
-a.aVar = 5.2 + complexFunc(3,5)
 
-print a
+function main() {
+    var a: AStruct = AStruct();
+    a.aVar = 5.2 + complexFunc(3,5);
+
+    println(a);
+}
 ```
 
 ## General idea

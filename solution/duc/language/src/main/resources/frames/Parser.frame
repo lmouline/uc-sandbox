@@ -33,6 +33,7 @@ import com.oracle.truffle.api.source.Source;
 import ldas.duc.DucLanguage;
 import ldas.duc.nodes.ExpressionNode;
 import ldas.duc.nodes.StatementNode;
+import ldas.duc.nodes.PrimitiveType;
 
 import java.util.ArrayList;
 import java.util.List;
