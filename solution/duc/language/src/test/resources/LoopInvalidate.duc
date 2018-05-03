@@ -3,7 +3,9 @@ function add(a, b) {
 }
 
 function loop(n) {
-  i = 0;  
+  var i: int;
+
+  i = 0;
   while (i < n) {  
     i = add(i, 1);  
   }  
@@ -11,6 +13,8 @@ function loop(n) {
 }  
 
 function main() {
+  var i: int;
+
   i = 0;
   while (i < 20) {
     loop(1000);

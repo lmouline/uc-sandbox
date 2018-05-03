@@ -44,12 +44,12 @@ import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
+import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.source.SourceSection;
+import ldas.duc.DucException;
 import ldas.duc.DucLanguage;
 import ldas.duc.nodes.*;
-import ldas.duc.nodes.ExpressionNode;
-import ldas.duc.nodes.StatementNode;
 import ldas.duc.nodes.access.ReadPropertyNode;
 import ldas.duc.nodes.access.ReadPropertyNodeGen;
 import ldas.duc.nodes.access.WritePropertyNode;
@@ -415,7 +415,12 @@ public class NodeFactory {
 
         String name = ((StringLiteralNode) nameNode).executeGeneric(null);
         FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(name);
-        lexicalScope.locals.put(name, frameSlot);
+
+        if(lexicalScope.locals.get(name) == null) {
+            throw new DucException("Trying to modify a not declared variable: " + name, nameNode);
+        }
+
+
         final ExpressionNode result = WriteLocalVariableNodeGen.create(valueNode, frameSlot);
 
         if (valueNode.hasSource()) {
@@ -448,6 +453,7 @@ public class NodeFactory {
         String name = ((StringLiteralNode) nameNode).executeGeneric(null);
         final ExpressionNode result;
         final FrameSlot frameSlot = lexicalScope.locals.get(name);
+
         if (frameSlot != null) {
             /* Read of a local variable. */
             result = ReadLocalVariableNodeGen.create(frameSlot);
@@ -472,15 +478,45 @@ public class NodeFactory {
         return result;
     }
 
+    public ExpressionNode createCharLiteral(Token literalToken) {
+        String literal = literalToken.val;
+        final CharLiteralNode result = new CharLiteralNode(literal.charAt(1));
+        srcFromToken(result, literalToken);
+        return result;
+    }
+
+    public ExpressionNode createBoolLiteral(Token literalToken) {
+        String literal = literalToken.val;
+        final BoolLiteralNode result = new BoolLiteralNode(Boolean.parseBoolean(literal));
+        srcFromToken(result, literalToken);
+        return result;
+    }
+
     public ExpressionNode createNumericLiteral(Token literalToken) {
         ExpressionNode result;
-        try {
-            /* Try if the literal is small enough to fit into a long value. */
-            result = new LongLiteralNode(Long.parseLong(literalToken.val));
-        } catch (NumberFormatException ex) {
-            /* Overflow of long value, so fall back to BigInteger. */
-            result = new BigIntegerLiteralNode(new BigInteger(literalToken.val));
+
+        final String val = literalToken.val;
+
+        if(val.contains(".")) {
+            result = new DoubleLiteralNode(Double.parseDouble(val));
+        } else if(val.endsWith("L")) {
+            try {
+                result = new LongLiteralNode(Long.parseLong(val.substring(0,val.length() - 1)));
+            } catch (NumberFormatException e2) {
+                result = new BigIntegerLiteralNode(new BigInteger(val));
+            }
+        } else {
+            try {
+                result = new IntLiteralNode(Integer.parseInt(val));
+            } catch (NumberFormatException e) {
+                try {
+                    result = new LongLiteralNode(Long.parseLong(val));
+                } catch (NumberFormatException e2) {
+                    result = new BigIntegerLiteralNode(new BigInteger(val));
+                }
+            }
         }
+
         srcFromToken(result, literalToken);
         return result;
     }
@@ -542,14 +578,35 @@ public class NodeFactory {
 
     public ExpressionNode createVarDcl(ExpressionNode assignmentName, String type) {
         String varName = ((StringLiteralNode)assignmentName).executeGeneric(null);
-        FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(varName);
+
+        FrameSlot frameSlot = null;
+        switch (type) {
+            case PrimitiveType.BOOL:
+                frameSlot = frameDescriptor.findOrAddFrameSlot(varName, FrameSlotKind.Boolean);
+                break;
+            case PrimitiveType.CHAR:
+                frameSlot = frameDescriptor.findOrAddFrameSlot(varName, FrameSlotKind.Object);
+                break;
+            case PrimitiveType.DOUBLE:
+                frameSlot = frameDescriptor.findOrAddFrameSlot(varName, FrameSlotKind.Double);
+                break;
+            case PrimitiveType.INT:
+                frameSlot = frameDescriptor.findOrAddFrameSlot(varName, FrameSlotKind.Int);
+                break;
+            case PrimitiveType.LONG:
+                frameSlot = frameDescriptor.findOrAddFrameSlot(varName, FrameSlotKind.Long);
+                break;
+            case PrimitiveType.STRING:
+                frameSlot = frameDescriptor.findOrAddFrameSlot(varName, FrameSlotKind.Object);
+                break;
+            default:
+                frameDescriptor.findOrAddFrameSlot(varName, FrameSlotKind.Illegal);
+                break;
+        }
+
         lexicalScope.locals.put(varName, frameSlot);
 
-        final ExpressionNode result = null;
-
-
-
-        return result;
+        return DeclareLocalVariableNodeGen.create(frameSlot, type);
     }
 
     /**

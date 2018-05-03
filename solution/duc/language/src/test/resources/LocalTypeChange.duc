@@ -1,4 +1,6 @@
 function recursion(n) {
+  var local: int;
+
   local = 42;
   
   if (n > 0) {

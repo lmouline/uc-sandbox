@@ -57,7 +57,7 @@ import java.math.BigInteger;
  * conversion methods for all types. In this class, we only cover types where the automatically
  * generated ones would not be sufficient.
  */
-@TypeSystem({long.class, BigNumber.class, boolean.class, String.class, Function.class, Null.class})
+@TypeSystem({long.class, BigNumber.class, boolean.class, String.class, Function.class, Null.class, char.class, int.class, double.class})
 public abstract class Types {
 
     /**

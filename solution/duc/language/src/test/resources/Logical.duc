@@ -1,4 +1,7 @@
 function main() {
+  var t: bool;
+  var f: bool;
+
   t = 10 == 10; // true
   f = 10 != 10; // false
   println(left(f) && right(f));

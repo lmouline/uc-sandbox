@@ -86,6 +86,11 @@ public abstract class EqualNode extends BinaryNode {
     }
 
     @Specialization
+    protected boolean equal(char left, char right) {
+        return left == right;
+    }
+
+    @Specialization
     protected boolean equal(Function left, Function right) {
         /*
          * Our function registry maintains one canonical Function object per function name, so we

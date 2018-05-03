@@ -8,6 +8,9 @@ function f() {return c();}
 function g() {return d() + e() + f();}
 
 function main() {
+    var i: int;
+    var result: int;
+
     i = 0;
     result = 0;
     while (i < 10000) {

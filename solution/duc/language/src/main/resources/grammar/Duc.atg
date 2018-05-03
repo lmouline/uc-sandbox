@@ -55,7 +55,8 @@ TOKENS
 
 identifier = letter {letter | digit}.
 stringLiteral = "\"" { stringChar } "\"".
-numericLiteral = "0" | nonZeroDigit { digit }.
+numericLiteral = ("0" | nonZeroDigit { digit }) (["." { digit }] | ['L']).
+charLiteral = "'" (letter | digit | cr | lf | tab) "'".
 
 PRAGMAS
 
@@ -221,12 +222,18 @@ Factor<out ExpressionNode result>
     (
         MemberExpression<out result, null, null, assignmentName>
     |
-                                                (. result = factory.createRead(assignmentName); .)
+                                                (. if(t.val.equals("true") || t.val.equals("false")) {
+                                                    result = factory.createBoolLiteral(t);
+                                                   } else {
+                                                    result = factory.createRead(assignmentName);
+                                                   } .)
     )
 |
     stringLiteral                               (. result = factory.createStringLiteral(t, true); .)
 |
     numericLiteral                              (. result = factory.createNumericLiteral(t); .)
+|
+    charLiteral                                 (. result = factory.createCharLiteral(t); .)
 |
     "("                                         (. int start = t.charPos; .)
     Expression<out result>                      (. ExpressionNode expr = result; .)
@@ -243,15 +250,16 @@ Factor<out ExpressionNode result>
 TypeDeclaration<out String result>
 =                                               (. result = null; .)
 (
-    PrimitiveTypeDcl<out result>
+    PrimitiveTypeDcl<out result>                (.  .)
     |
     identifier                                  (. result = t.val; .)
 )
 .
 
 
-PrimitiveTypeDcl<out String result> =
-                                                (. result = null; .)
+PrimitiveTypeDcl<out String result>
+=                                               (. result = null; .)
+
 (
     "string"                                    (. result = PrimitiveType.STRING;.)
 |

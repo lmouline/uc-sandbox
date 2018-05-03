@@ -1,7 +1,8 @@
 function doIt(a) {
   println("Initial stack trace:");
   println(stacktrace());
-  
+
+  var hello: int;
   hello = 123;
   println("After 123 assignment:");
   println(stacktrace());
@@ -14,6 +15,7 @@ function doIt(a) {
 }
 
 function main() {
+  var i: int;
   i = 0;
   while (i < 10) {
     doIt(i);
