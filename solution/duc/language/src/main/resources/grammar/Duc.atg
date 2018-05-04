@@ -83,17 +83,23 @@ identifier                                      (. Token identifierToken = t; .)
 "("                                             (. int bodyStartPos = t.charPos; .)
                                                 (. factory.startFunction(identifierToken, bodyStartPos); .)
 [
-    identifier                                  (. factory.addFormalParameter(t); .)
+    (
+    identifier                                  (. Token paramIdent = t; .)
+    ":"
+    TypeDeclaration<out String typeDcl>         (. factory.addFormalParameter(paramIdent, typeDcl); .)
+    )
     {
         ","
-        identifier                              (. factory.addFormalParameter(t); .)
+        (
+            identifier                          (. paramIdent = t; .)
+            ":"
+            TypeDeclaration<out typeDcl>         (. factory.addFormalParameter(t, typeDcl); .)
+        )
     }
 ]
 ")"
-Block<out StatementNode body, false>          (. factory.finishFunction(body); .)
+Block<out StatementNode body, false>            (. factory.finishFunction(body); .)
 .
-
-
 
 Block<out StatementNode result, boolean inLoop>
 =                                               (. factory.startBlock();
@@ -299,7 +305,7 @@ MemberExpression<out ExpressionNode result, ExpressionNode r, ExpressionNode ass
     Expression<out ExpressionNode value>      (. if (assignmentName == null) {
                                                        SemErr("invalid assignment target");
                                                    } else if (assignmentReceiver == null) {
-                                                       result = factory.createAssignment(assignmentName, value);
+                                                       result = factory.createAssignment(assignmentName, value, true);
                                                    } else {
                                                        result = factory.createWriteProperty(assignmentReceiver, assignmentName, value);
                                                    } .)

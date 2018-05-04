@@ -104,12 +104,16 @@ public class DebugDirectTest {
 
     private static Source createFactorial() {
         return Source.newBuilder("duc", "function test() {\n" +
+                        "  var res: double;\n" +
                         "  res = fac(2);\n" + "  println(res);\n" +
                         "  return res;\n" +
                         "}\n" +
                         "function fac(n) {\n" +
                         "  if (n <= 1) {\n" +
                         "    return 1;\n" + "  }\n" +
+                        "  var nMinusOne: int; \n" +
+                        "  var nMOFact: double;\n" +
+                        "  var res: double;\n" +
                         "  nMinusOne = n - 1;\n" +
                         "  nMOFact = fac(nMinusOne);\n" +
                         "  res = n * nMOFact;\n" +
@@ -118,6 +122,7 @@ public class DebugDirectTest {
 
     private static Source createFactorialWithDebugger() {
         return Source.newBuilder("duc", "function test() {\n" +
+                        "  var res: double;\n" +
                         "  res = fac(2);\n" +
                         "  println(res);\n" +
                         "  return res;\n" +
@@ -126,6 +131,9 @@ public class DebugDirectTest {
                         "  if (n <= 1) {\n" +
                         "    return 1;\n" +
                         "  }\n" +
+                        "  var nMinusOne: int; \n" +
+                        "  var nMOFact: double;\n" +
+                        "  var res: double;\n" +
                         "  nMinusOne = n - 1;\n" +
                         "  nMOFact = fac(nMinusOne);\n" +
                         "  debugger;\n" +
@@ -138,6 +146,7 @@ public class DebugDirectTest {
         return Source.newBuilder("duc", "function test() {\n" +
                         "}\n" +
                         "function interopFunction(notifyHandler) {\n" +
+                        "  var executing: bool;\n" +
                         "  executing = true;\n" +
                         "  while (executing == true || executing) {\n" +
                         "    executing = notifyHandler.isExecuting;\n" +
@@ -363,7 +372,7 @@ public class DebugDirectTest {
         run.addLast(() -> {
             suspendedEvent.prepareStepInto(size);
         });
-    }
+}
 
     private void assertLocation(final String name, final int line, final boolean isBefore, final String code, final Object... expectedFrame) {
         run.addLast(() -> {

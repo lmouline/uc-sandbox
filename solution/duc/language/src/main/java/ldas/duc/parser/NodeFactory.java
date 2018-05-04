@@ -131,14 +131,22 @@ public class NodeFactory {
         startBlock();
     }
 
-    public void addFormalParameter(Token nameToken) {
+    public void addFormalParameter(Token nameToken, String type) {
         /*
          * Method parameters are assigned to local variables at the beginning of the method. This
          * ensures that accesses to parameters are specialized the same way as local variables are
          * specialized.
          */
+
+
+        final ExpressionNode declareParam = createVarDcl(createStringLiteral(nameToken, false) ,type);
+        methodNodes.add(declareParam);
+
         final ReadArgumentNode readArg = new ReadArgumentNode(parameterCount);
-        ExpressionNode assignment = createAssignment(createStringLiteral(nameToken, false), readArg);
+        ExpressionNode assignment = createAssignment(createStringLiteral(nameToken, false), readArg, false);
+
+
+
         methodNodes.add(assignment);
         parameterCount++;
     }
@@ -408,7 +416,7 @@ public class NodeFactory {
      * @param valueNode The value to be assigned
      * @return An ExpressionNode for the given parameters. null if nameNode or valueNode is null.
      */
-    public ExpressionNode createAssignment(ExpressionNode nameNode, ExpressionNode valueNode) {
+    public ExpressionNode createAssignment(ExpressionNode nameNode, ExpressionNode valueNode, boolean check) {
         if (nameNode == null || valueNode == null) {
             return null;
         }
@@ -416,7 +424,7 @@ public class NodeFactory {
         String name = ((StringLiteralNode) nameNode).executeGeneric(null);
         FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(name);
 
-        if(lexicalScope.locals.get(name) == null) {
+        if(check && lexicalScope.locals.get(name) == null) {
             throw new DucException("Trying to modify a not declared variable: " + name, nameNode);
         }
 

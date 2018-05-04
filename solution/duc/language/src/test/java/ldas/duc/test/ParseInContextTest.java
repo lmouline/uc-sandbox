@@ -100,7 +100,10 @@ public class ParseInContextTest {
 
                 @TruffleBoundary
                 private Object parseAndEval() {
-                    Source aPlusB = Source.newBuilder("a + b").mimeType("application/x-sl").name("plus.duc").build();
+                    Source aPlusB = Source.newBuilder("a + b;")
+                            .mimeType("application/x-sl")
+                            .name("plus.duc")
+                            .build();
                     return getContextReference().get().parse(aPlusB, "a", "b").call(30, 12);
                 }
             });

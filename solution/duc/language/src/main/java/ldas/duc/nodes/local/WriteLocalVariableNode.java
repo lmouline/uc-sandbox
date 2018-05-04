@@ -175,7 +175,7 @@ public abstract class WriteLocalVariableNode extends ExpressionNode {
 
         try {
             Object previous = FrameUtil.getObjectSafe(frame, getSlot());
-            if(previous.getClass() != value.getClass()) {
+            if(previous != null && previous.getClass() != value.getClass()) {
                 throw new DucException("Incompatible types beteween receiver and value: " + previous.getClass() + " != " + value.getClass(), this);
             }
         } catch (IllegalStateException e) {
