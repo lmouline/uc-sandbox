@@ -7,6 +7,7 @@ public final class PrimitiveType {
     public static final String INT = "int";
     public static final String BOOL = "bool";
     public static final String CHAR = "char";
+    public static final String OBJECT = "object";
 
     private PrimitiveType(){}
 

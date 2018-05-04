@@ -278,6 +278,8 @@ PrimitiveTypeDcl<out String result>
     "bool"                                      (. result = PrimitiveType.BOOL;.)
 |
     "char"                                      (. result = PrimitiveType.CHAR;.)
+|
+    "object"                                    (. result = PrimitiveType.OBJECT;.)
 )
 .
 

@@ -108,7 +108,7 @@ public class DebugDirectTest {
                         "  res = fac(2);\n" + "  println(res);\n" +
                         "  return res;\n" +
                         "}\n" +
-                        "function fac(n) {\n" +
+                        "function fac(n: int) {\n" +
                         "  if (n <= 1) {\n" +
                         "    return 1;\n" + "  }\n" +
                         "  var nMinusOne: int; \n" +

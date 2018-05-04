@@ -607,6 +607,9 @@ public class NodeFactory {
             case PrimitiveType.STRING:
                 frameSlot = frameDescriptor.findOrAddFrameSlot(varName, FrameSlotKind.Object);
                 break;
+            case PrimitiveType.OBJECT:
+                frameSlot = frameDescriptor.findOrAddFrameSlot(varName, FrameSlotKind.Object);
+                break;
             default:
                 frameDescriptor.findOrAddFrameSlot(varName, FrameSlotKind.Illegal);
                 break;

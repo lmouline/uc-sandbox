@@ -5,6 +5,7 @@ function main() {
     var test4: char;
     var test5: bool;
     var test6: long;
+    var test7: object;
 
 
 
@@ -14,6 +15,7 @@ function main() {
     println(test4);
     println(test5);
     println(test6);
+    println(test7);
 
     test1 = "A String";
     test2 = 5;
@@ -21,6 +23,7 @@ function main() {
     test4 = 'f';
     test5 = true;
     test6 = 787456985L;
+    test7 = new();
 
     println(test1);
     println(test2);
@@ -28,6 +31,13 @@ function main() {
     println(test4);
     println(test5);
     println(test6);
+    println(test7);
 
     test2 = 8;
+    test7.aVar = 8;
+
+    println(test2);
+    println(test7);
+    println(test7.aVar);
+
 }

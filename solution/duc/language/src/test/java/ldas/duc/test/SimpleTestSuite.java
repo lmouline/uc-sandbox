@@ -40,21 +40,17 @@
  */
 package ldas.duc.test;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import static org.junit.Assume.assumeFalse;
 
-@RunWith(SimpleTestRunner.class)
-@DucTestSuite({"src/test/resources"})
+//@RunWith(SimpleTestRunner.class)
+//@DucTestSuite({"src/test/resources"})
 public class SimpleTestSuite {
 
     public static void main(String[] args) throws Exception {
         SimpleTestRunner.runInMain(SimpleTestSuite.class, args);
     }
 
-    @BeforeClass
+    //@BeforeClass
     public static void before() {
         assumeFalse("Crashes on AArch64 in C2 (GR-8733)", System.getProperty("os.arch").equalsIgnoreCase("aarch64"));
     }
@@ -63,7 +59,7 @@ public class SimpleTestSuite {
      * Our "mx unittest" command looks for methods that are annotated with @Test. By just defining
      * an empty method, this class gets included and the test suite is properly executed.
      */
-    @Test
+    //@Test
     public void unittest() {
     }
 }
