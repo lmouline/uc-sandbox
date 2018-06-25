@@ -179,7 +179,7 @@ public abstract class WriteLocalVariableNode extends ExpressionNode {
                 throw new DucException("Incompatible types beteween receiver and value: " + previous.getClass() + " != " + value.getClass(), this);
             }
         } catch (IllegalStateException e) {
-            throw new DucException("Incompatible types beteween receiver and value", this);
+            throw new DucException("5Incompatible types beteween receiver and value", this);
         }
 
 

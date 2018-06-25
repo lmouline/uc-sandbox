@@ -9,6 +9,7 @@ This is the main purpose of the DUC language.
 
 DUC Language has been built by modifying the SimpleLanguage provided by [Oracle Labs](https://github.com/graalvm/simplelanguage).
 
+
 ## Base language
 
 TBD.
@@ -105,7 +106,7 @@ Example (based on GCM language):
 ```
 
 struct AStruct {
-    att myVar: UncertainGaussFunc<T>
+    att myVar: UncertainGaussFunc<double>
     att myVar2: Unconfident<double[]>
 
     rel b: ConfidencePerc<BStruct>

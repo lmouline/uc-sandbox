@@ -166,7 +166,7 @@ public class DebugTest {
         final Source factorial = slCode("function main() {\n" +
                         "  return fac(5);\n" +
                         "}\n" +
-                        "function fac(n) {\n" +
+                        "function fac(n: int) {\n" +
                         "  if (n <= 1) {\n" +
                         "    return 1;\n" + // break
                         "  }\n" +
@@ -239,7 +239,7 @@ public class DebugTest {
         final Source factorial = slCode("function main() {\n" +
                         "  return fac(5);\n" +
                         "}\n" +
-                        "function fac(n) {\n" +
+                        "function fac(n: int) {\n" +
                         "  if (n <= 1) {\n" +
                         "    return 1;\n" + // break
                         "  }\n" +
@@ -275,7 +275,7 @@ public class DebugTest {
         final Source factorial = slCode("function main() {\n" +
                         "  return fac(5);\n" +
                         "}\n" +
-                        "function fac(n) {\n" +
+                        "function fac(n: int) {\n" +
                         "  if (n <= 1) {\n" +
                         "    debugger; return 1;\n" + // // break
                         "  }\n" +
@@ -299,6 +299,7 @@ public class DebugTest {
     @Test(expected = PolyglotException.class)
     public void testTimeboxing() throws Throwable {
         final Source endlessLoop = slCode("function main() {\n" +
+                        "  var i: int; \n" +
                         "  i = 1; \n" +
                         "  while(i > 0) {\n" +
                         "    i = i + 1;\n" +
@@ -326,6 +327,7 @@ public class DebugTest {
     @Test
     public void testNull() throws Throwable {
         final Source factorial = slCode("function main() {\n" +
+                        "  var res: object;" +
                         "  res = doNull();\n" +
                         "  return res;\n" +
                         "}\n" +
@@ -348,8 +350,13 @@ public class DebugTest {
     }
 
     @Test
-    public void testDebugValue() throws Throwable {
+    public void testDebugValue() {
         final Source varsSource = slCode("function main() {\n" +
+                        "  var a: object; \n" +
+                        "  var b: boll; \n" +
+                        "  var c: int; \n" +
+                        "  var d: string;\n" +
+                        "  var e: object; \n" +
                         "  a = doNull();\n" +
                         "  b = 10 == 10;\n" +
                         "  c = 10;\n" +
@@ -428,8 +435,10 @@ public class DebugTest {
     @Test
     public void testValuesScope() throws Throwable {
         final Source varsSource = slCode("function main() {\n" +
+                        "  var a: int;" +
                         "  a = 1;\n" +
                         "  if (a > 0) {\n" +
+                        "    var b: int;" +
                         "    b = 10;\n" +
                         "    println(b);\n" +
                         "  }\n" +
@@ -511,6 +520,13 @@ public class DebugTest {
     @Test
     public void testMetaObjects() {
         final Source varsSource = slCode("function main() {\n" +
+                        "  var a: object;\n" +
+                        "  var b: boolean;\n" +
+                        "  var c: int;\n" +
+                        "  var cBig: long;\n" +
+                        "  var d: string;\n" +
+                        "  var e: object;\n" +
+                        "  var f: object;\n" +
                         "  a = doNull();\n" +
                         "  b = 10 == 10;\n" +
                         "  c = 10;\n" +
@@ -553,6 +569,11 @@ public class DebugTest {
     @Test
     public void testSourceLocation() {
         final Source varsSource = slCode("function main() {\n" +
+                        "  var a: object;\n" +
+                        "  var c: int;\n" +
+                        "  var d: string;\n" +
+                        "  var e: object; \n" +
+                        "  var f: object; \n" +
                         "  a = doNull();\n" +
                         "  c = 10;\n" +
                         "  d = \"str\";\n" +
@@ -595,7 +616,7 @@ public class DebugTest {
         final Source stackSource = slCode("function main() {\n" +
                         "  return fac(10);\n" +
                         "}\n" +
-                        "function fac(n) {\n" +
+                        "function fac(n: int) {\n" +
                         "  if (n <= 1) {\n" +
                         "    return 1;\n" + // break
                         "  }\n" +
@@ -639,7 +660,7 @@ public class DebugTest {
 
     @Test
     public void testStackInterop() {
-        final Source stackSource = slCode("function fac(n, multiply) {\n" +
+        final Source stackSource = slCode("function fac(n: int, multiply: int) {\n" +
                         "  if (n <= 1) {\n" +
                         "    debugger;\n" +
                         "    return 1;\n" +
@@ -702,7 +723,7 @@ public class DebugTest {
         final Source source = slCode("function main() {\n" +
                         "  return fac(10);\n" +
                         "}\n" +
-                        "function fac(n) {\n" +
+                        "function fac(n: int) {\n" +
                         "  if (n <= 1) {\n" +
                         "    return 1;\n" + // break
                         "  }\n" +
@@ -743,10 +764,12 @@ public class DebugTest {
     public void testArgumentsAndValues() throws Throwable {
         // Test that after a re-enter, arguments are kept and variables are cleared.
         final Source source = slCode("function main() {\n" +
+                        "  var i: int;" +
                         "  i = 10;\n" +
                         "  return fnc(i = i + 1, 20);\n" +
                         "}\n" +
-                        "function fnc(n, m) {\n" +
+                        "function fnc(n: int, m: int) {\n" +
+                        "  var x: int;" +
                         "  x = n + m;\n" +
                         "  n = m - n;\n" +
                         "  m = m / 2;\n" +
@@ -791,7 +814,7 @@ public class DebugTest {
     @Test
     public void testMisplacedLineBreakpoints() throws Throwable {
         final String sourceStr = "// A comment\n" +              // 1
-                        "function invocable(n) {\n" +
+                        "function invocable(n: int) {\n" +
                         "  if (R1-3_R27_n <= 1) {\n" +
                         "    R4-6_one \n" +
                         "        =\n" +                 // 5
@@ -867,7 +890,7 @@ public class DebugTest {
     @Test
     public void testBreakpointEverywhereBreaks() throws Throwable {
         final String sourceCode = "// A comment\n" +              // 1
-                        "function invocable(n) {\n" +
+                        "function invocable(n: int) {\n" +
                         "  if (n <= 1) {\n" +
                         "    one \n" +
                         "        =\n" +                 // 5
@@ -910,15 +933,16 @@ public class DebugTest {
 
     private void checkExpressionStepPositions(String stepPositions, boolean includeStatements, StepDepth... steps) {
         Source source = slCode("function main() {\n" +
+                        "  var x: int;" +
                         "  x = 2;\n" +
                         "  while (x >= 0 && 5 >= 0) {\n" +
-                        "    a = 2 * x;\n" +
-                        "    b = (a * a) / (x * x + 1);\n" +
+                        "    var a:int; a = 2 * x;\n" +
+                        "    var b:int; b = (a * a) / (x * x + 1);\n" +
                         "    x = x - transform(a, b);\n" +
                         "  }\n" +
                         "  return x / 1;\n" +
                         "}\n" +
-                        "function transform(a, b) {\n" +
+                        "function transform(a: int, b:int) {\n" +
                         "  return (1 + 1) * (a + b);\n" +
                         "}\n");
         SourceElement[] elements;
@@ -1154,11 +1178,11 @@ public class DebugTest {
     @Test
     public void testExceptions() {
         final Source source = slCode("function main() {\n" +
-                        "  i = \"0\";\n" +
+                        "  var i: string; i = \"2\";\n" +
                         "  return invert(i);\n" +
                         "}\n" +
-                        "function invert(n) {\n" +
-                        "  x = 10 / n;\n" +
+                        "function invert(n: string) {\n" +
+                        "  var x: int; x = 10 / n;\n" +
                         "  return x;\n" +
                         "}\n");
         try (DebuggerSession session = startSession()) {
