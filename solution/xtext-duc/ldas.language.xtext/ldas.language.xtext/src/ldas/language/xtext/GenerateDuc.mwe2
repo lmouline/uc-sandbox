@@ -32,6 +32,8 @@ Workflow {
 		language = StandardLanguage {
 			name = "ldas.language.xtext.Duc"
 			fileExtensions = "duc"
+			
+//			referencedResource = "platform:/resource/ldas.language.xtext/model/Duc.genmodel"
 
 			serializer = {
 				generateStub = false

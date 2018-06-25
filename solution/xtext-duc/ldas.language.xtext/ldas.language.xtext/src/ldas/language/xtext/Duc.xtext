@@ -1,9 +1,9 @@
-grammar ldas.language.xtext.Duc with org.eclipse.xtext.common.Terminals
+grammar ldas.language.xtext.Duc with org.eclipse.xtext.xbase.Xbase
 
 generate duc "http://www.language.ldas/xtext/Duc"
 
-Model:
-	greetings+=Greeting*;
-	
-Greeting:
-	'Hello' name=ID '!';
+
+
+DucModel returns DucModel:
+	{DucModel} pack=XExpression
+;
