@@ -1,0 +1,9 @@
+grammar ldas.language.xtext.Duc with org.eclipse.xtext.common.Terminals
+
+generate duc "http://www.language.ldas/xtext/Duc"
+
+Model:
+	greetings+=Greeting*;
+	
+Greeting:
+	'Hello' name=ID '!';
