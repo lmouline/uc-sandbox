@@ -1,0 +1,78 @@
+grammar ldas.xtext.Duc with org.eclipse.xtext.xbase.annotations.XbaseWithAnnotations
+
+//import "http://www.eclipse.org/xtend"
+//import "http://www.eclipse.org/xtext/xbase/Xbase"// as xbase
+import "http://www.eclipse.org/xtext/xbase/Xtype" as xtype
+//import "http://www.eclipse.org/Xtext/Xbase/XAnnotations" as annotations
+//import "http://www.eclipse.org/xtext/common/JavaVMTypes" as types
+
+generate duc "http://www.xtext.ldas/Duc"
+
+File:
+	'package' package=QualifiedName
+	importSection=XImportSection?
+	(statements += Statement)*
+;
+
+Statement:
+	DucClass | Function
+;
+
+Function:
+	'def' name=ID '(' (parameters+=FunctionParameter (',' (parameters+=FunctionParameter)*)? )? ')' (':' returnType=Type)? '{'
+		(members+=XExpressionOrVarDeclaration)*
+	'}'
+;
+
+FunctionParameter:
+	paramName=ID ':' paramType=Type
+;
+
+DucClass:
+	'class' name=ID '{'
+		(properties+=Property)*
+	'}'
+;
+
+Property:
+	{Atribute} att=Attribute (Uncertainty)?
+	|
+	{Relation} rel=Relation (Uncertainty)?
+;
+
+Attribute:
+	( 'att' name=ID ':' typeAtt=Type ('=' init=(XExpression|InitComplex))?)
+	|
+	( 'const' name=ID ':' typeAtt=Type '=' init=(XExpression|InitComplex))
+;
+
+InitComplex returns XExpression:
+	ComplexType '(' (param+=XExpression (',' param+=XExpression)* )?')'
+;
+
+Relation:
+	'rel' name=ID ':' typeRel=[DucClass] ('[' min=INT '..' (maxInt=(INT) | max='*') ']')?
+;
+
+fragment Uncertainty:
+	('{'
+			(metaAttributes+=Attribute)*
+
+			('derived' ('(' (parameters+=FunctionParameter ',' (parameters+=FunctionParameter)*)? ')')? (derivationComputation=XBlockExpression| '=' derivatoinFunction=[Function]) )?
+			('profile' ('(' (parameters+=FunctionParameter ',' (parameters+=FunctionParameter)*)? ')')? (profileComputation=XBlockExpression| '=' profileFunction=[Function]))?
+			('uncertainty'  ('(' (parameters+=FunctionParameter ',' (parameters+=FunctionParameter)*)? ')')? ":" type=Type (ucComputation=XBlockExpression| '=' ucFunction=[Function]))?
+
+		'}')
+;
+
+Type:
+	{Type} ('double' | 'int' | 'string' | 'boolean' | 'long' |
+	      'char' | 'byte' | 'float' |  'short'
+	      )
+	      |
+	      ComplexType
+;
+
+ComplexType:
+	{ComplexType} ('Gaussian' | 'Bernouilli')
+;
