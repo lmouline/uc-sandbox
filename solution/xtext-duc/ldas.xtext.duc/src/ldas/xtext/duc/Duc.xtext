@@ -1,6 +1,11 @@
 grammar ldas.xtext.Duc with org.eclipse.xtext.xbase.annotations.XbaseWithAnnotations
 
-import "http://www.xtext.ldas/Duc"
+//import "http://www.xtext.ldas/Duc"
+import "http://www.eclipse.org/xtext/xbase/Xtype"
+import "http://www.eclipse.org/xtext/common/JavaVMTypes"
+import "http://www.eclipse.org/xtext/xbase/Xbase" as xbase
+
+generate duc "http://www.xtext.ldas/Duc"
 
 File:
 	'package' package=QualifiedName
@@ -9,20 +14,20 @@ File:
 ;
 
 Statement:
-	DucClass | Function
+	Class | Function
 ;
 
 Function:
-	'def' name=ID '(' (parameters+=FunctionParameter (',' (parameters+=FunctionParameter)*)? )? ')' (':' returnType=Type)? '{'
+	'def' name=ID '(' (parameters+=FunctionParameter (',' (parameters+=FunctionParameter)*)? )? ')' (':' returnType=JvmTypeReference)? '{'
 		(members+=XExpressionOrVarDeclaration)*
 	'}'
 ;
 
 FunctionParameter:
-	paramName=ID ':' paramType=Type
+	paramName=ID ':' paramType=JvmTypeReference
 ;
 
-DucClass:
+Class:
 	'class' name=ID '{'
 		(properties+=Property)*
 	'}'
@@ -35,17 +40,17 @@ Property:
 ;
 
 Attribute:
-	( 'att' name=ID ':' typeAtt=Type ('=' init=(XExpression|InitComplex))?)
+	( 'att' name=ID ':' typeAtt=JvmTypeReference ('=' init=(XExpression))?)
 	|
-	( 'const' name=ID ':' typeAtt=Type '=' init=(XExpression|InitComplex))
+	( 'const' name=ID ':' typeAtt=JvmTypeReference '=' init=(XExpression))
 ;
 
-InitComplex returns XExpression:
-	ComplexType '(' (param+=XExpression (',' param+=XExpression)* )?')'
+InitComplex returns xbase::XExpression:
+	{InitComplex} (type=UType '(' (parameters+=FunctionParameter (',' (parameters+=FunctionParameter)*)? )? ')')
 ;
 
 Relation:
-	'rel' name=ID ':' typeRel=[DucClass] ('[' min=INT '..' (maxInt=(INT) | max='*') ']')?
+	'rel' name=ID ':' typeRel=[Class] ('[' min=INT '..' (maxInt=(INT) | max='*') ']')?
 ;
 
 fragment Uncertainty:
@@ -54,19 +59,25 @@ fragment Uncertainty:
 
 			('derived' ('(' (parameters+=FunctionParameter ',' (parameters+=FunctionParameter)*)? ')')? (derivationComputation=XBlockExpression| '=' derivatoinFunction=[Function]) )?
 			('profile' ('(' (parameters+=FunctionParameter ',' (parameters+=FunctionParameter)*)? ')')? (profileComputation=XBlockExpression| '=' profileFunction=[Function]))?
-			('uncertainty'  ('(' (parameters+=FunctionParameter ',' (parameters+=FunctionParameter)*)? ')')? ":" type=Type (ucComputation=XBlockExpression| '=' ucFunction=[Function]))?
+			('uncertainty'  ('(' (parameters+=FunctionParameter ',' (parameters+=FunctionParameter)*)? ')')? ":" type=JvmTypeReference (ucComputation=XBlockExpression| '=' ucFunction=[Function]))?
 
 		'}')
 ;
 
-Type:
-	{Type} ('double' | 'int' | 'string' | 'boolean' | 'long' |
-	      'char' | 'byte' | 'float' |  'short'
-	      )
-	      |
-	      ComplexType
+@Override 
+JvmTypeReference:
+	super | UType
 ;
 
-ComplexType:
-	{ComplexType} ('Gaussian' | 'Bernouilli')
+UType:
+//	{Type} ('double' | 'int' | 'string' | 'boolean' | 'long' |
+//	      'char' | 'byte' | 'float' |  'short'
+//	      )
+//	      |
+//	      ComplexType
+	{Type} ('Gaussian' | 'Bernouilli')
 ;
+
+//ComplexType:
+//	{ComplexType} ('Gaussian' | 'Bernouilli')
+//;
