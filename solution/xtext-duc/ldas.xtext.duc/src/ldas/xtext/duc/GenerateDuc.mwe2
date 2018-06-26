@@ -4,6 +4,7 @@ import org.eclipse.xtext.xtext.generator.*
 import org.eclipse.xtext.xtext.generator.model.project.*
 
 var rootPath = ".."
+var runtimeProject = "ldas.xtext.duc"
 
 Workflow {
 	
@@ -32,6 +33,8 @@ Workflow {
 		language = StandardLanguage {
 			name = "ldas.xtext.duc.Duc"
 			fileExtensions = "duc"
+			
+			referencedResource = "platform:/resource/${runtimeProject}/model/Duc.genmodel"
 
 			serializer = {
 				generateStub = false
