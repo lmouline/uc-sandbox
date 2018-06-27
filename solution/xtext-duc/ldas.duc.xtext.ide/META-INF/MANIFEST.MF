@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: ldas.duc.xtext.ide
+Bundle-ManifestVersion: 2
+Bundle-Name: ldas.duc.xtext.ide
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: ldas.duc.xtext.ide; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: ldas.duc.xtext,
+ org.eclipse.xtext.ide,
+ org.eclipse.xtext.xbase.ide
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
