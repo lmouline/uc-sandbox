@@ -1,5 +1,5 @@
-Data UnCertainty - DUC
-----------------------
+Data UnCertainty - DUC Project
+------------------------------
 
 **[TODO]: Intro**
 
