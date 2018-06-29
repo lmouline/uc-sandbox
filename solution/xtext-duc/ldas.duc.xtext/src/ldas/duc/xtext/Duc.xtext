@@ -1,80 +1,94 @@
-grammar ldas.xtext.Duc with org.eclipse.xtext.xbase.Xbase
+grammar ldas.xtext.Duc with fr.inria.diverse.xcore.lang.Lxcore
 
 //import "http://www.xtext.ldas/Duc"
-import "http://www.eclipse.org/xtext/xbase/Xbase"
+//import "http://www.eclipse.org/xtext/xbase/Xbase"
+import "http://www.inria.fr/diverse/xcore_light/Lcore"
 
 generate duc "http://www.xtext.ldas/Duc"
 
-File:
-	'package' package=QualifiedName
-	importSection=XImportSection?
-	(statements += Statement)*
+Package:
+	{Package} papa=XPackage
 ;
 
-Statement:
-	Class | Function
+@Override
+XGenericType:
+	super | UType
 ;
 
-Function:
-	'def' name=ID '(' (parameters+=FunctionParameter (',' (parameters+=FunctionParameter)*)? )? ')' (':' returnType=JvmTypeReference)? '{'
-		(members+=XExpressionOrVarDeclaration)*
-	'}'
+UType:
+	{UType} ('Gaussian' | 'Bernouilli')
 ;
 
-FunctionParameter:
-	paramName=ID ':' paramType=JvmTypeReference
-;
 
-Class:
-	'class' name=ID '{'
-		(properties+=Property)*
-	'}'
-;
-
-Property:
-	{Atribute} att=Attribute (Uncertainty)?
-	|
-	{Relation} rel=Relation (Uncertainty)?
-;
-
-Attribute:
-	( 'att' name=ID ':' typeAtt=JvmTypeReference ('=' init=(XExpression))?)
-	|
-	( 'const' name=ID ':' typeAtt=JvmTypeReference '=' init=(XExpression))
-;
-
-InitComplex returns XExpression:
-	{InitComplex} (type=UType '(' (parameters+=FunctionParameter (',' (parameters+=FunctionParameter)*)? )? ')')
-;
-
-Relation:
-	'rel' name=ID ':' typeRel=[Class] ('[' min=INT '..' (maxInt=(INT) | max='*') ']')?
-;
-
-fragment Uncertainty:
-	('{'
-			(metaAttributes+=Attribute)*
-
-			('derived' ('(' (parameters+=FunctionParameter ',' (parameters+=FunctionParameter)*)? ')')? (derivationComputation=XBlockExpression| '=' derivatoinFunction=[Function]) )?
-			('profile' ('(' (parameters+=FunctionParameter ',' (parameters+=FunctionParameter)*)? ')')? (profileComputation=XBlockExpression| '=' profileFunction=[Function]))?
-			('uncertainty'  ('(' (parameters+=FunctionParameter ',' (parameters+=FunctionParameter)*)? ')')? ":" type=JvmTypeReference (ucComputation=XBlockExpression| '=' ucFunction=[Function]))?
-
-		'}')
-;
+//File:
+//	'package' package=QualifiedName
+//	(statements += Statement)*
+//;
+//
+//Statement:
+//	Class | Function
+//;
+//
+//Function:
+//	'def' name=ID '(' (parameters+=FunctionParameter (',' (parameters+=FunctionParameter)*)? )? ')' (':' returnType=JvmTypeReference)? '{'
+//		(members+=XExpressionOrVarDeclaration)*
+//	'}'
+//;
+//
+//FunctionParameter:
+//	paramName=ID ':' paramType=JvmTypeReference
+//;
+//
+//Class:
+//	'class' name=ID '{'
+//		(properties+=Property)*
+//	'}'
+//;
+//
+//Property:
+//	{Atribute} att=Attribute (Uncertainty)?
+//	|
+//	{Relation} rel=Relation (Uncertainty)?
+//;
+//
+//Attribute:
+//	( 'att' name=ID ':' typeAtt=JvmTypeReference ('=' init=(XExpression))?)
+//	|
+//	( 'const' name=ID ':' typeAtt=JvmTypeReference '=' init=(XExpression))
+//;
+//
+//InitComplex returns XExpression:
+//	{InitComplex} (type=UType '(' (parameters+=FunctionParameter (',' (parameters+=FunctionParameter)*)? )? ')')
+//;
+//
+//Relation:
+//	'rel' name=ID ':' typeRel=[Class] ('[' min=INT '..' (maxInt=(INT) | max='*') ']')?
+//;
+//
+//fragment Uncertainty:
+//	('{'
+//			(metaAttributes+=Attribute)*
+//
+//			('derived' ('(' (parameters+=FunctionParameter ',' (parameters+=FunctionParameter)*)? ')')? (derivationComputation=XBlockExpression| '=' derivatoinFunction=[Function]) )?
+//			('profile' ('(' (parameters+=FunctionParameter ',' (parameters+=FunctionParameter)*)? ')')? (profileComputation=XBlockExpression| '=' profileFunction=[Function]))?
+//			('uncertainty'  ('(' (parameters+=FunctionParameter ',' (parameters+=FunctionParameter)*)? ')')? ":" type=JvmTypeReference (ucComputation=XBlockExpression| '=' ucFunction=[Function]))?
+//
+//		'}')
+//;
 
 //@Override 
 //JvmTypeReference:
 //	super | UType
 //;
 
-UType:
+//UType:
 //	{Type} ('double' | 'int' | 'string' | 'boolean' | 'long' |
 //	      'char' | 'byte' | 'float' |  'short'
 //	      )
 //	      |
 //	      ComplexType
-	{Type} ('Gaussian' | 'Bernouilli')
-;
+//	{Type} ('Gaussian' | 'Bernouilli')
+//;
 
 //ComplexType:
 //	{ComplexType} ('Gaussian' | 'Bernouilli')
