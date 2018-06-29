@@ -10,3 +10,7 @@ solution/duc/language/sandbox.duc
 **/*/bin
 
 **/*/model/generated
+
+plugin.xml_gen
+
+.antlr-generator-*.jar
