@@ -8,3 +8,5 @@ solution/duc/language/sandbox.duc
 **/*/xtend-gen
 **/*/src-gen
 **/*/bin
+
+**/*/model/generated
