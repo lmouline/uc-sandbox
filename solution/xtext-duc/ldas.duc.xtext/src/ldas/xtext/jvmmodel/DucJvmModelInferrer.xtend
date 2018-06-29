@@ -3,12 +3,10 @@
  */
 package ldas.xtext.jvmmodel
 
-//import com.google.inject.Inject
-//import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
-//import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
-import ldas.xtext.duc.Package
 import fr.inria.diverse.xcore.lang.jvmmodel.LxcoreJvmModelInferrer
+import javax.inject.Inject
+import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 
 //import ldas.xtext.duc.Function
 //import ldas.xtext.duc.Statement
@@ -24,7 +22,7 @@ class DucJvmModelInferrer extends LxcoreJvmModelInferrer {
 	/**
 	 * convenience API to build and initialize JVM types and their members.
 	 */
-//	@Inject extension JvmTypesBuilder
+	@Inject extension JvmTypesBuilder
 
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the
@@ -49,9 +47,9 @@ class DucJvmModelInferrer extends LxcoreJvmModelInferrer {
 	 *            rely on linking using the index if isPreIndexingPhase is
 	 *            <code>true</code>.
 	 */
-	 def dispatch void infer(Package ducPack, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
-	 	infer(ducPack.papa, acceptor, isPreIndexingPhase)
-	 }
+//	 def dispatch void infer(Package ducPack, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
+//	 	infer(ducPack.papa, acceptor, isPreIndexingPhase)
+//	 }
 //	def dispatch void infer(File ducFile, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
 //		for(Statement stmt: ducFile.statements) {
 ////			infer(stmt, acceptor, isPreIndexingPhase)

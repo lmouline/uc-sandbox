@@ -2,16 +2,16 @@ grammar ldas.xtext.Duc with fr.inria.diverse.xcore.lang.Lxcore
 
 //import "http://www.xtext.ldas/Duc"
 //import "http://www.eclipse.org/xtext/xbase/Xbase"
-import "http://www.inria.fr/diverse/xcore_light/Lcore"
+import "http://www.inria.fr/diverse/xcore_light/Lcore" as lxcore
 
 generate duc "http://www.xtext.ldas/Duc"
 
-Package:
-	{Package} papa=XPackage
+Package returns lxcore::XPackage:
+	XPackage
 ;
 
 @Override
-XGenericType:
+XGenericType returns lxcore::XGenericType:
 	super | UType
 ;
 
