@@ -16,8 +16,28 @@ XGenericType returns lxcore::XGenericType:
 ;
 
 UType:
-	{UType} ('Gaussian' | 'Bernouilli')
+	{UType} ('Gaussian' | 'Bernouilli') '<' generic=XGenericType '>'
 ;
+
+
+
+@Override
+XAttribute returns lxcore::XAttribute:
+	super 
+;
+
+
+/*fragment Uncertainty:
+	('{'
+			(metaAttributes+=XAttribute)*
+
+			('derived' ('(' (parameters+=XParameter ',' (parameters+=XParameter)*)? ')')? (derivationComputation=XBlockExpression| '=' derivatoinFunction=[lxcore::XOperation]) )?
+			('profile' ('(' (parameters+=XParameter ',' (parameters+=XParameter)*)? ')')? (profileComputation=XBlockExpression| '=' profileFunction=[lxcore::XOperation]))?
+			('uncertainty'  ('(' (parameters+=XParameter ',' (parameters+=XParameter)*)? ')')? ":" typeUc=JvmTypeReference (ucComputation=XBlockExpression| '=' ucFunction=[lxcore::XOperation]))?
+
+		'}')
+;*/
+
 
 
 //File:
