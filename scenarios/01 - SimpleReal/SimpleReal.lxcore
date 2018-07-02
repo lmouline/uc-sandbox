@@ -1,31 +1,37 @@
-package sample.real
+package sample.boolean
 
 class Building {
     Room rooms[0..*]
-    Bernoulli<boolean> heatingSystemOn
+    boolean heatingSystemOn
 
-
-    op double avgTemp() {
-        double sum = 0
-
+    op boolean heatingWithOpenWindow() {
+        boolean oneWindowOpen = false
         for(Room r: rooms) {
-            sum += r.temperature
+            if(r.windowOpen) {
+                oneWindowOpen = oneWindowOpen || r.windowOpen;
+                break;
+            }
         }
-
-        return sum / rooms.length
+        return self.heatingSystemOn && oneWindowOpen;
     }
 
-    op void checkPanicAlarm() {
-        double avgTemp = avgTemp()
-
-        if(avgTemp < 0 || avgTemp > 35) {
-            panicAlarm()
+     op boolean heatingWithOpenWindowAndSomeone() {
+        for(Room r: rooms) {
+            if(r instanceOf Office) {
+               boolean riseAlarm = r.windowOpen && r.someonePresent && heatingSystemOn //a bit "artificial"
+                if(riseAlarm) {
+                    sendEmail(r.employees)
+                }
+            }
         }
-    }
+     }
 }
 
 abstract class Room {
-    double temperature
+    Bernoulli<boolean> someonePresent
+    Bernoulli<boolean> windowOpen
+
+
 }
 
 class Office extends Room {
