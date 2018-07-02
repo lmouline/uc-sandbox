@@ -1,0 +1,52 @@
+package sample.boolean
+
+class Building {
+    Room rooms[0..*]
+    boolean heatingSystemOn
+
+    op boolean heatingWithOpenWindow() {
+        boolean oneWindowOpen = false
+        for(Room r: rooms) {
+            if(r.windowOpen) {
+                oneWindowOpen = oneWindowOpen || r.windowOpen;
+                break;
+            }
+        }
+        return self.heatingSystemOn && oneWindowOpen;
+    }
+
+     op boolean heatingWithOpenWindowAndSomeone() {
+        for(Room r: rooms) {
+            if(r instanceOf Office) {
+               boolean riseAlarm = r.windowOpen && r.someonePresent && heatingSystemOn //a bit "artificial"
+                if(riseAlarm) {
+                    sendEmail(r.employees)
+                }
+            }
+        }
+     }
+}
+
+abstract class Room {
+    Bernoulli<boolean> someonePresent
+    Bernoulli<boolean> windowOpen
+
+
+}
+
+class Office extends Room {
+    Employee employees[0..*]
+
+}
+class PrinterRoom extends Room {}
+
+class Employee {
+    String email
+}
+
+
+
+
+
+
+

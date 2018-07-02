@@ -1,0 +1,33 @@
+package sample.boolean
+
+class Building {
+    Room rooms[0..*]
+    Bernoulli<boolean> heatingSystemOn
+
+
+
+
+}
+
+abstract class Room {
+
+
+
+}
+
+class Office extends Room {
+    Employee employees[0..*]
+
+}
+class PrinterRoom extends Room {}
+
+class Employee {
+    String email
+}
+
+
+
+
+
+
+
