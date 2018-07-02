@@ -1,18 +1,32 @@
-package sample.boolean
+package sample.real
 
 class Building {
     Room rooms[0..*]
     Bernoulli<boolean> heatingSystemOn
 
 
+    op Gaussian<double> avgTemp() {
+        Gaussian<double> sum = 0 // implicit conversion to Gaussian(0,1)
 
+        for(Room r: rooms) {
+            sum += r.temperature
+        }
 
+        return sum / rooms.length
+    }
+
+    op void checkPanicAlarm() {
+        double avgTemp = avgTemp()
+
+        if((avgTemp < 0)[0.9] || (avgTemp > 35)[0.9]) {
+            panicAlarm()
+        }
+
+     }
 }
 
 abstract class Room {
-
-
-
+    Gaussian<double> temperature
 }
 
 class Office extends Room {
@@ -24,10 +38,3 @@ class PrinterRoom extends Room {}
 class Employee {
     String email
 }
-
-
-
-
-
-
-
