@@ -3,10 +3,6 @@ package sample.boolean
 class Building {
     Room rooms[0..*]
     Bernoulli<boolean> heatingSystemOn
-
-
-
-
 }
 
 abstract class Room {

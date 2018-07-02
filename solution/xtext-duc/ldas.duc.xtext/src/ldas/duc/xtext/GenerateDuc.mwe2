@@ -35,8 +35,8 @@ Workflow {
 			name = "ldas.duc.xtext.Duc"
 			fileExtensions = "duc"
 			
-			referencedResource = "platform:/resource/fr.inria.diverse.xcore/model/Lcore.genmodel"
-			referencedResource = "platform:/resource/ldas.duc.xtext/model/generated/Duc.genmodel"
+//			referencedResource = "platform:/resource/fr.inria.diverse.xcore/model/Lcore.genmodel"
+//			referencedResource = "platform:/resource/ldas.duc.xtext/model/generated/Duc.genmodel"
 
 			serializer = {
 				generateStub = false

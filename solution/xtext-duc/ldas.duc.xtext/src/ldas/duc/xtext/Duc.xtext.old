@@ -1,110 +1,30 @@
-grammar ldas.xtext.Duc with org.eclipse.xtext.xbase.Xbase
+grammar ldas.xtext.Duc with fr.inria.diverse.xcore.lang.Lxcore
 
 //import "http://www.xtext.ldas/Duc"
 //import "http://www.eclipse.org/xtext/xbase/Xbase"
-//import "http://www.inria.fr/diverse/xcore_light/Lcore" as lxcore
-
-import "http://www.eclipse.org/xtext/xbase/Xtype" as xtype 
+import "http://www.inria.fr/diverse/xcore_light/Lcore" as lxcore
 
 generate duc "http://www.xtext.ldas/Duc"
 
-
-
-
-Package:
-	'package' packageName=QualifiedName
-	elements+=(Class | Function)*
+Package returns lxcore::XPackage:
+	XPackage
 ;
 
-Class:
-	'class' name=ID ('extends' super=JvmTypeReference)?'{'
-		properties += Property*
-	'}'
+@Override
+XGenericType returns lxcore::XGenericType:
+	super | UType
 ;
 
-Property:
-	Attribute | Reference
-;
-
-Attribute:
-	'att' name=ID ':' type=JvmTypeReference (uc=Uncertainty)?
-;
-
-Reference:
-	'ref' name=ID ':' type=JvmTypeReference (uc=Uncertainty)?
-;
-
-Function:
-	'def' name=ID ('(' (parameters+=Parameter ',' (parameters+=Parameter)*)? ')')? (':' fctType=JvmTypeReference) body=XBlockExpression
-;
-
-Uncertainty:
-	{Uncertainty} ('{'
-			(metaAttributes+=Attribute)*
-
-			(derived=Derivation)?
-			(profile=Profile)?
-			(uncertainty=UncertaintyEval)?
-
-	'}')
-;
-
-Derivation:
-	{Derivation} 'derived' ('(' (parameters+=Parameter ',' (parameters+=Parameter)*)? ')')? (derivationComputation=XBlockExpression| '=' derivatoinFunction=[Function]) 
-;
-
-Profile:
-	{Profile} 'profile' ('(' (parameters+=Parameter ',' (parameters+=Parameter)*)? ')')? (profileComputation=XBlockExpression| '=' profileFunction=[Function])
-;
-
-UncertaintyEval:
-	'uncertainty'  ('(' (parameters+=Parameter ',' (parameters+=Parameter)*)? ')')? ":" typeUc=JvmTypeReference (ucComputation=XBlockExpression| '=' ucFunction=[Function])
+UType:
+	{UType} ('Gaussian' | 'Bernouilli') '<' generic=XGenericType '>'
 ;
 
 
 
-Parameter:
-	{Parameter} (name=ID ':' type=JvmTypeReference)
+@Override
+XAttribute returns lxcore::XAttribute:
+	super 
 ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Package returns lxcore::XPackage:
-//	XPackage
-//;
-//
-//@Override
-//XGenericType returns lxcore::XGenericType:
-//	super | UType
-//;
-//
-//UType:
-//	{UType} ('Gaussian' | 'Bernouilli') '<' generic=XGenericType '>'
-//;
-//
-//
-//
-//@Override
-//XAttribute returns lxcore::XAttribute:
-//	super 
-//;
 
 
 /*fragment Uncertainty:

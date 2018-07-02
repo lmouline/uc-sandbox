@@ -7,9 +7,24 @@ import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import fr.inria.diverse.xcore.lang.jvmmodel.LxcoreJvmModelInferrer
 import javax.inject.Inject
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
-
-//import ldas.xtext.duc.Function
-//import ldas.xtext.duc.Statement
+import org.eclipse.emf.ecore.EObject
+import ldas.xtext.duc.Function
+import ldas.xtext.duc.Property
+import ldas.xtext.duc.DucFactory
+import java.util.ArrayList
+import java.util.List
+import ldas.xtext.duc.Attribute
+import ldas.xtext.duc.Reference
+import org.eclipse.xtext.common.types.JvmGenericType
+import ldas.xtext.duc.Parameter
+import org.eclipse.xtext.common.types.JvmVisibility
+import org.eclipse.xtext.common.types.JvmType
+import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
+import org.eclipse.xtext.common.types.JvmTypeReference
+import org.eclipse.xtext.xbase.jvmmodel.JvmTypeReferenceBuilder
+import org.eclipse.xtext.common.types.TypesFactory
+import org.eclipse.xtend.lib.macro.declaration.TypeReference
+import org.eclipse.emf.mwe2.language.mwe2.StringLiteral
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -17,12 +32,13 @@ import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
  * <p>The JVM model should contain all elements that would appear in the Java code 
  * which is generated from the source model. Other models link against the JVM model rather than the source model.</p>     
  */
-class DucJvmModelInferrer extends LxcoreJvmModelInferrer {
+class DucJvmModelInferrer extends AbstractModelInferrer {
 
 	/**
 	 * convenience API to build and initialize JVM types and their members.
 	 */
 	@Inject extension JvmTypesBuilder
+	
 
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the
@@ -63,4 +79,143 @@ class DucJvmModelInferrer extends LxcoreJvmModelInferrer {
 //	def dispatch void infer(Function ducFct, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
 //		
 //	}
+
+
+	def dispatch void infer(ldas.xtext.duc.Package ducPackage, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
+		val packName = ducPackage.packageName
+		val List<Function> functions = new ArrayList
+		
+		for(EObject elements: ducPackage.elements) {
+			inferElements(elements, acceptor, packName, functions)
+		}
+		
+		if(functions.size > 0) {
+			generateFct(functions, acceptor, packName)
+		}
+	}
+	
+	def dispatch void inferElements(ldas.xtext.duc.Class ducClass, IJvmDeclaredTypeAcceptor acceptor, String packName, List<Function> functions) {
+		acceptor.accept(ducClass.toClass(packName + "." + ducClass.name)) [
+			documentation = ducClass.documentation
+			
+			if(ducClass.super !== null) {
+				it.superTypes += ducClass.super
+			}
+		
+			
+			for(Property prop: ducClass.properties) {
+				inferProperty(prop, it)
+			}
+		]
+	}
+	
+	def dispatch void inferElements(Function ducFct, IJvmDeclaredTypeAcceptor acceptor, String packName, List<Function> functions ) {
+		functions.add(ducFct)
+	}
+	
+	def void generateFct(List<Function> functions, IJvmDeclaredTypeAcceptor acceptor, String packName) {
+		val ldas.xtext.duc.Class functionClass  = DucFactory.eINSTANCE.createClass
+		functionClass.name = packName + "." +  "FunctionRegistry"
+		
+		acceptor.accept(functionClass.toClass(functionClass.name)) [
+		
+			for(Function fct: functions) {
+				it.members += fct.toMethod(fct.name, fct.fctType) [
+					for(Parameter param: fct.parameters) {
+						it.parameters += param.toParameter(param.name, param.type)
+					}
+					
+					it.body = fct.body
+				]
+			}
+		]
+		
+	}
+	
+	def dispatch void inferProperty(Attribute attr, JvmGenericType javaClass) {
+		
+		if(attr.uc !== null) {
+			val ldas.xtext.duc.Class innerClass  = DucFactory.eINSTANCE.createClass
+			innerClass.name = attr.name.toFirstUpper
+			
+			javaClass.members += innerClass.toClass(innerClass.name) [
+				it.visibility = JvmVisibility.PRIVATE	
+				
+				for (Attribute metaA: attr.uc.metaAttributes) {
+					it.members+= metaA.toField(metaA.name, metaA.type) [
+						it.visibility = JvmVisibility.PUBLIC
+					]
+				}
+				
+//				if(attr.uc.derived !== null) {
+//					it.members += attr.uc.profile.toMethod("derived", attr.type) [
+//						
+//					]
+//				}
+//				
+//				if(attr.uc.uncertainty !== null) {
+//					it.members += attr.uc.profile.toMethod("uncertainty", attr.type) [
+//						
+//					]
+//				}
+//				
+//				if(attr.uc.profile !== null) {
+//					it.members += attr.uc.profile.toMethod("profile", attr.type) [
+//						
+//					]
+//				}
+				
+			]
+			
+		
+			
+			
+		} else {
+			javaClass.members += attr.toField(attr.name, attr.type)
+			javaClass.members += attr.toGetter(attr.name, attr.type)
+			javaClass.members += attr.toSetter(attr.name, attr.type)
+		}
+	}
+	
+	def dispatch void inferProperty(Reference ref, JvmGenericType javaClass) {
+		if(ref.uc !== null) {
+			val ldas.xtext.duc.Class innerClass  = DucFactory.eINSTANCE.createClass
+			innerClass.name = ref.name.toFirstUpper
+			javaClass.members += innerClass.toClass(innerClass.name) [
+				it.visibility = JvmVisibility.PRIVATE	
+				
+				for (Attribute metaA: ref.uc.metaAttributes) {
+					it.members+= metaA.toField(metaA.name, metaA.type) [
+						it.visibility = JvmVisibility.PUBLIC
+					]
+				}
+				
+//				if(ref.uc.derived !== null) {
+//					it.members += ref.uc.profile.toMethod("derived", ref.type) [
+//						
+//					]
+//				}
+//				
+//				if(ref.uc.uncertainty !== null) {
+//					it.members += ref.uc.profile.toMethod("uncertainty", ref.type) [
+//					
+//					]
+//				}
+//				
+//				if(ref.uc.profile !== null) {
+//					it.members += ref.uc.profile.toMethod("profile", ref.type) [
+//						
+//					]
+//				}
+				
+			]
+		} else {
+			javaClass.members += ref.toField(ref.name, ref.type)
+			javaClass.members += ref.toGetter(ref.name, ref.type)
+			javaClass.members += ref.toSetter(ref.name, ref.type)
+		}
+		
+	}
+	
+	
 }
