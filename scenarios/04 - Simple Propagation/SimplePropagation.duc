@@ -7,14 +7,12 @@ class Building {
         Time timeStamp
         Time timeValidity
 
-        derivation {
+        derivation(Time current) {
             double sum = 0
             int nbValues = 0
             self.timeValidity = r[0].temperature.timeValidity
             self.timeStamp = r[0].temperature.timeStamp
             self.uncertainty = r[0].temperature.uncertainty
-
-            Time current = CurrentTime()
 
             for(Room r: rooms) {
                 if(r.temperature(current)[0.9] != null) { //there is a value with more than 90% of confidence
