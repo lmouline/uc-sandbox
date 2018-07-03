@@ -1,4 +1,4 @@
-package sample.boolean
+package simple.boolean
 
 class Building {
     Room rooms[0..*]
