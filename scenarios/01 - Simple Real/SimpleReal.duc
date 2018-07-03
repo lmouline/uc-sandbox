@@ -1,12 +1,10 @@
-package sample.real
+package simple.real
 
 class Building {
     Room rooms[0..*]
-    Bernoulli<boolean> heatingSystemOn
-
 
     op Gaussian<double> avgTemp() {
-        Gaussian<double> sum = 0 // implicit conversion to Gaussian(0,1)
+        Gaussian<double> sum = 0 // implicit conversion to Gaussian(0,X)
 
         for(Room r: rooms) {
             sum += r.temperature
@@ -15,26 +13,36 @@ class Building {
         return sum / rooms.length
     }
 
-    op void checkPanicAlarm() {
-        double avgTemp = avgTemp()
+    op Gaussian<double> avgTempWithConfidenceFilter() {
+            Gaussian<double> sum = 0 // implicit conversion to Gaussian(0,X)
+            int nbValues = 0
 
-        if((avgTemp < 0)[0.9] || (avgTemp > 35)[0.9]) {
-            panicAlarm()
+            for(Room r: rooms) {
+                if(r.temperature[0.9] != null) { //there is a value with more than 90% of confidence
+                    sum += r.temperature //return the value with the highest confidence
+                    nbValues++
+                }
+            }
+
+            if(nbValues > 0.9 * rooms.length) {
+                return sum / nbValues //nbValues implicit conversion to Gaussian(nbValues,X)
+            }
+
+            return -273.15 //not possible to compute the value, absolute zero, implicit conversion to Gaussian(-273.15, X)
+        }
+
+    op void checkPanicAlarm() {
+        Gaussian<double> avgTemp = avgTemp()
+
+        if((avgTemp != -273.15)[0.9]) {
+            if((avgTemp < 0)[0.9] || (avgTemp > 35)[0.9]) {
+                panicAlarm()
+            }
         }
 
      }
 }
 
-abstract class Room {
+class Room {
     Gaussian<double> temperature
-}
-
-class Office extends Room {
-    Employee employees[0..*]
-
-}
-class PrinterRoom extends Room {}
-
-class Employee {
-    String email
 }
