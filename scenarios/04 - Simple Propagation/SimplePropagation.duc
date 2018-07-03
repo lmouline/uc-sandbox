@@ -1,0 +1,64 @@
+package simple.propagation
+
+class Building {
+    Room rooms[0..*]
+
+    Gaussian<double> avgTemp {
+        Time timeStamp
+        Time timeValidity
+
+        derivation {
+            double sum = 0
+            int nbValues = 0
+            self.timeValidity = r[0].temperature.timeValidity
+            self.timeStamp = r[0].temperature.timeStamp
+            self.uncertainty = r[0].temperature.uncertainty
+
+            Time current = CurrentTime()
+
+            for(Room r: rooms) {
+                if(r.temperature(current)[0.9] != null) { //there is a value with more than 90% of confidence
+                    sum += r.temperature(current).value //return the value with the highest confidence
+                    nbValues++
+
+                    if(self.timeValidity > r.temperature.timeValidity) {
+                        self.timeValidity = r.temperature.timeValidity
+                    }
+
+                    if(self.timeStamp < r.temperature.timeStamp) {
+                        self.timeStamp = r.temperature.timeStamp
+                    }
+
+                    self.uncertainty = self.uncertainty + r.temperature(current).uncertainty
+                }
+            }
+
+            if(nbValues > 0.9 * rooms.length) {
+                self.value= sum / nbValues
+            }
+
+            self.value = -273.15 //not possible to compute the value, absolute zero
+        }
+    }
+
+
+
+}
+
+class Room {
+    Gaussian<double> temperature {
+        Time timeValidity = 5ms
+        Time timeStamp
+        double precision
+
+        uncertainty = Gaussian(self.value, precision)
+
+        getUncertainty(Time current) { //function called to resolved uncertainty
+            if(current <= temperatureTimeStamp+temperatureTimeValidity) {
+                return self.uncertainty;
+            }
+
+            return Gaussian(self.value, 0);
+        }
+    }
+}
