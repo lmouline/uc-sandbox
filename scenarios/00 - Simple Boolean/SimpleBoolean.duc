@@ -39,10 +39,7 @@ class Building {
 abstract class Room {
     Bernoulli<boolean> someonePresent {
         value = true
-
-        setUncertainty() {
-            Bernoulli(0.95)
-        }
+        uncertainty = Bernoulli(0.95)
     }
 
     Bernoulli<boolean> windowOpen {

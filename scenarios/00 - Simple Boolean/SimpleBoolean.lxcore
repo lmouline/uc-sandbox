@@ -28,8 +28,8 @@ class Building {
 }
 
 abstract class Room {
-    Bernoulli<boolean> someonePresent
-    Bernoulli<boolean> windowOpen
+    boolean someonePresent
+    boolean windowOpen
 
 
 }
