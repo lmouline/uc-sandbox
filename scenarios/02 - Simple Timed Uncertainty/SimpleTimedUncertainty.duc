@@ -49,8 +49,11 @@ class Building {
 
 class Room {
     Gaussian<double> temperature {
-        Time timeValidity
+        Time timeValidity = 5ms
         Time timeStamp
+        double precision
+
+        uncertainty = Gaussian(self.value, precision)en allé
 
         getUncertainty(Time current) { //function called to resolved uncertainty
             if(current <= temperatureTimeStamp+temperatureTimeValidity) {
