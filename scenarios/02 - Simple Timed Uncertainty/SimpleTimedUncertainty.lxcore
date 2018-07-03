@@ -1,0 +1,57 @@
+package simple.timed.uncertainty
+
+class Building {
+    Room rooms[0..*]
+    Bernoulli<boolean> heatingSystemOn
+
+
+    op double avgTemp() {
+        double sum = 0
+        int nbCorrectValue = 0
+
+        Time current = CurrentTime()
+
+        for(Room r: rooms) {
+            if(r.tempValid()) {
+                nbCorrectValue++
+                sum += r.temperature
+            }
+        }
+
+        if(nbCorrectValue > 0.9*rooms.length) {
+            return sum / nbCorrectValue;
+        }
+
+        return -273.15 //not possible to compute the value, absolute zero
+    }
+
+    op void checkPanicAlarm() {
+        double avgTemp = avgTemp()
+
+        if(avgTemp != -273.15) {
+            if(avgTemp < 0 || avgTemp > 35) {
+                panicAlarm()
+            }
+        }
+    }
+}
+
+class Room {
+    double temperature
+    Time temperatureTimeStamp
+    Time temperatureTimeValidity
+
+    op boolean tempValid(Time current) {
+         if(current <= temperatureTimeStamp+temperatureTimeValidity) {
+            return true;
+         }
+         return false;
+    }
+}
+
+
+
+
+
+
+

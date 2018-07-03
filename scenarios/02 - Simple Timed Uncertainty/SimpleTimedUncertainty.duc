@@ -1,0 +1,63 @@
+package simple.timed.uncertainty
+
+class Building {
+    Room rooms[0..*]
+    Bernoulli<boolean> heatingSystemOn
+
+
+    op Gaussian<double> avgTemp() {
+        Gaussian<double> sum = 0 // implicit conversion to Gaussian(0,X)
+
+        for(Room r: rooms) {
+            sum += r.temperature
+        }
+
+        return sum / rooms.length
+    }
+
+    op Gaussian<double> avgTempWithConfidenceFilter() {
+            Gaussian<double> sum = 0 // implicit conversion to Gaussian(0,X)
+            int nbValues = 0
+
+            Tine current = CurrentTime()
+
+            for(Room r: rooms) {
+                if(r.temperature(current)[0.9] != null) { //there is a value with more than 90% of confidence
+                    sum += r.temperature(current) //return the value with the highest confidence
+                    nbValues++
+                }
+            }
+
+            if(nbValues > 0.9 * rooms.length) {
+                return sum / nbValues //nbValues implicit conversion to Gaussian(nbValues,0)
+            }
+
+            return -273.15 //not possible to compute the value, absolute zero, implicit conversion to Gaussian(-273.15, X)
+        }
+
+    op void checkPanicAlarm() {
+        Gaussian<double> avgTemp = avgTemp()
+
+        if(avgTemp != -273.15) {
+            if((avgTemp < 0)[0.9] || (avgTemp > 35)[0.9]) {
+                panicAlarm()
+            }
+        }
+
+     }
+}
+
+class Room {
+    Gaussian<double> temperature {
+        Time timeValidity
+        Time timeStamp
+
+        getUncertainty(Time current) { //function called to resolved uncertainty
+            if(current <= temperatureTimeStamp+temperatureTimeValidity) {
+                return self.uncertainty;
+            }
+
+            return Gaussian(self.value, 0);
+        }
+    }
+}
