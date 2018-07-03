@@ -44,5 +44,9 @@ class Building {
 }
 
 class Room {
-    Gaussian<double> temperature
+    Gaussian<double> temperature {
+        double precision
+
+        uncertainty = Gaussian(self.value, precision)
+    }
 }
