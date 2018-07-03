@@ -1,0 +1,55 @@
+package simple.reevaluation
+
+class Building {
+    Room rooms[0..*]
+}
+
+class Room {
+    Gaussian<boolean> someonePresent {
+        Time validity = 1min
+        Time timeStamp
+
+        getValue(Time current) {
+            if(current > self.timeStamp + self.validity) {
+                return null
+            }
+            return value;
+        }
+
+        getUncertainty(Time current) {
+            if(current > self.timeStamp + self.validity) {
+                return self.uncertainty
+            }
+            return Gaussian(self.value, 0);
+        }
+
+        /* not clear here */
+        //setUncertainty(Gaussian<double> light, Gaussian<double> noiseLevel) {
+        //
+        //}
+
+    }
+
+    Gaussian<double> light {
+        Time timeStamp
+    }
+
+    Gaussian<double> noiseLevel {
+        Time validity = 5ms
+        Time timeStamp
+
+        getValue(Time current) {
+            if(current > self.timeStamp + self.validity) {
+                return null
+            }
+            return value;
+        }
+
+        getUncertainty(Time current) {
+            if(current > self.timeStamp + self.validity) {
+                return self.uncertainty
+            }
+            return Gaussian(self.value, 0);
+        }
+    }
+}

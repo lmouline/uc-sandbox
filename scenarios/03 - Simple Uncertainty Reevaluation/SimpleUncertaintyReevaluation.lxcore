@@ -1,0 +1,16 @@
+package simple.reevaluation
+
+
+class Building {
+    Room rooms[0..*]
+}
+
+class Room {
+    boolean someonePresent
+    double light
+    double noiseLevel
+}
+
+
+
+
