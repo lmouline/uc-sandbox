@@ -37,8 +37,18 @@ class Building {
 }
 
 abstract class Room {
-    Bernoulli<boolean> someonePresent
-    Bernoulli<boolean> windowOpen
+    Bernoulli<boolean> someonePresent {
+        value = true
+
+        setUncertainty() {
+            Bernoulli(0.95)
+        }
+    }
+
+    Bernoulli<boolean> windowOpen {
+        self.value = false
+        self.uncertainty = Bernoulli(0.95)
+    }
 
 
 }
