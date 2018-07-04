@@ -17,7 +17,17 @@ class Building {
             Gaussian<double> sum = 0 // implicit conversion to Gaussian(0,X)
             int nbValues = 0
 
+            /**
+                Alternative using a Stream API like (if the extended language allow this):
+                   - rooms.select((r.temperature[0.9] != null )
+                            .map(v | sum+=v; nbValues++)
+                            .post(nbValues > 0.9*roomsLength)
+            **/
             for(Room r: rooms) {
+                /**
+                    WARNING: Usually double cannot be compared with a null value
+                    Either we will be to modify the semantic to allow this or we will need to find a trick like adding an "exists()" method
+                **/
                 if(r.temperature[0.9] != null) { //there is a value with more than 90% of confidence
                     sum += r.temperature //return the value with the highest confidence
                     nbValues++
@@ -44,9 +54,36 @@ class Building {
 }
 
 class Room {
-    Gaussian<double> temperature {
-        double precision
+    /**
+        Other ways to define this:
+            - Gaussian<double> temperature {
+                double precision = 0.6
 
-        uncertainty = Gaussian(self.value, precision)
-    }
+                uncertainty = (self.value, precision)
+            }
+    **/
+    /**
+        Other suggestion:
+            - UReal <double> {@precision : 0.6} temperature
+            - Gaussian<double> [@std : 0.6] temperature
+    **/
+    /**
+        UReal type comes from the Antonio V. works
+    **/
+    UReal temperature(precision: 0.6)
 }
+
+
+/**
+Meta datatype Gaussian<T> {
+    attribute T mean
+    attribute double std
+
+    uncertainty = Gaussian(mean, std)
+}
+
+Meta datatype UReal extends Gaussian<Real> {
+    attribute double precision
+    self.std = precision
+}
+**/
