@@ -106,6 +106,20 @@ class Employee {
     String email
 }
 
+/**
+Meta datatype Gaussian<T> {
+    attribute T mean
+    attribute double std
+
+    uncertainty = Gaussian(mean, std)
+}
+
+Meta datatype UReal extends Gaussian<Real> {
+    attribute double precision
+    self.std = precision
+}
+**/
+
 
 
 
