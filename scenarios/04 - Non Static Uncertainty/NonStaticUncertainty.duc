@@ -20,14 +20,6 @@ class Room {
                                            {3,3,2,3,4}};
 
          op double accuracy(double ambientTemperature, double objectTemperature) {
-                 double[][] accuracyMatrix = {{4,4,4,4,4},
-                                              {4,4,3,3,3},
-                                              {4,3,2,2,2},
-                                              {3,2,1,1,2},
-                                              {2,1,0.5,1,2},
-                                              {3,1,1,2,3},
-                                              {3,3,2,3,4}};
-
                  int ligneIdx, colonneIdx;
                  if(ambientTemperature < -40) {
                      throw new RuntimeException("Unknown");
