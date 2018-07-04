@@ -2,13 +2,17 @@ package simple.boolean
 
 class Building {
     Room rooms[0..*]
-    Bernoulli<boolean> heatingSystemOn
+    Bernoulli<boolean> heatingSystemOn = (true, 0.75)
 
+/**
+* An example of binary operations (AND , OR) over uncertain types
+**/
     op Bernoulli<boolean> heatingWithOpenWindow() {
-        Bernoulli<boolean> oneWindowOpen = false // implicit conversion to Bernoulli(false, X)
+        Bernoulli<boolean> oneWindowOpen = false // implicit conversion to Bernoulli(false, 1)
+
         for(Room r: rooms) {
-            if(r.windowOpen[0.8]) { // <=> (r.windowOpen == true)[0.8] -> r.windowOpen == true with 0.8 confidence
-          //opposite: if(!r.windowOpen[0.2]) <=> (!r.windowOpen == true)[0.2] <=> (r.windowOpen == false)[0.2] -> r.windowOpen == false with 0.2 confidence
+
+            if(r.windowOpen [0.8]) {// the confidence is related to the value of the iverall expression and not only one variable <=> (r.windowOpen == true)[0.8] -> r.windowOpen == true with 0.8 confidence
                 oneWindowOpen = oneWindowOpen || r.windowOpen;
                 /**
                     if oneWindowOpen is a boolean, we loose the uncertainty
@@ -21,8 +25,10 @@ class Building {
      op Bernoulli<boolean> heatingWithOpenWindowAndSomeone() {
         for(Room r: rooms) {
             if(r instanceOf Office) {
-                Bernoulli<boolean> riseAlarm = r.windowOpen[0.8] && r.someonePresent[0.9] && heatingSystemOn[0.9] //a bit "artificial"
-                if(riseAlarm[0.65]) { //0.65 = 0.8 * 0.9 * 0.9
+                Bernoulli<boolean> riseAlarm = r.windowOpen && r.someonePresent && heatingSystemOn //a bit "artificial"
+                //boolean riseAlarm = r.windowOpen[0.8] && r.someonePresent[0.9] && heatingSystemOn[0.9]
+
+                if(riseAlarm[0.8]) {
                     sendEmail(r.employees)
                 }
 
@@ -37,10 +43,13 @@ class Building {
 }
 
 abstract class Room {
+
     Bernoulli<boolean> someonePresent {
         value = true
         uncertainty = Bernoulli(0.95)
     }
+
+    //Bernoulli<boolean> someonePresent = (true, 0.95)
 
     Bernoulli<boolean> windowOpen {
         self.value = false
@@ -59,7 +68,6 @@ class PrinterRoom extends Room {}
 class Employee {
     String email
 }
-
 
 
 

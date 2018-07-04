@@ -1,0 +1,75 @@
+package simple.real
+
+class Building {
+    Room rooms[0..*]
+
+    op Gaussian<double> avgTemp() {
+        Gaussian<double> sum = 0 // implicit conversion to Gaussian(0,X)
+
+        for(Room r: rooms) {
+            sum += r.temperature
+        }
+
+        return sum / rooms.length
+    }
+
+    op Gaussian<double> avgTempWithConfidenceFilter() {
+            Gaussian<double> sum = 0 // implicit conversion to Gaussian(0,X)
+            int nbValues = 0
+// rooms.select(r.temperature (r.temperature[0.9] != null ).map(v | sum+=v; nbValues++).post(nbValues > 0.9*roomsLength)
+            for(Room r: rooms) {
+                if(r.temperature[0.9] != null) { //there is a value with more than 90% of confidence //warning, double cannot be compared with a null value
+                    sum += r.temperature //return the value with the highest confidence
+                    nbValues++
+                }
+            }
+
+            if(nbValues > 0.9 * rooms.length) {
+                return sum / nbValues //nbValues implicit conversion to Gaussian(nbValues,X)
+            }
+
+            return -273.15 //not possible to compute the value, absolute zero, implicit conversion to Gaussian(-273.15, X)
+        }
+
+    op void checkPanicAlarm() {
+        Gaussian<double> avgTemp = avgTemp()
+
+        if((avgTemp != -273.15)[0.9]) {
+            if((avgTemp < 0)[0.9] || (avgTemp > 35)[0.9]) {
+                panicAlarm()
+            }
+        }
+
+     }
+}
+
+class Room {
+    Gaussian<double> [@precision : +/1] temperature
+    //{
+      //  -- @value : --> hidden
+        //@precision : +/-2
+   //}
+
+
+     UReal <double>  {@precision : 0.6}  temperature // A voir !  or  UReal <double>  temperature {@precision : 0.6}
+}
+Meta datatype Gaussian<T> {
+    attribute T mean
+    attribute double std
+}
+
+Meta datatype UReal extends Gaussian<Real> {
+    attribute double precision
+    std = precision
+}
+
+class Room2 {
+
+        RoomTemperature temperature
+}
+
+Class RoomTemperature {
+  T value
+  double/int precision
+  Gaussian uncertainty = Gaussian(value, precision * 2)
+}
