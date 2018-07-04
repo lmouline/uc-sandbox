@@ -4,14 +4,30 @@ class Building {
     Room rooms[0..*]
     Bernoulli<boolean> heatingSystemOn
 
+    /**
+    * An example of binary operations (AND , OR) over uncertain types
+    **/
     op Bernoulli<boolean> heatingWithOpenWindow() {
         Bernoulli<boolean> oneWindowOpen = false // implicit conversion to Bernoulli(false, X)
         for(Room r: rooms) {
-            if(r.windowOpen[0.8]) { // <=> (r.windowOpen == true)[0.8] -> r.windowOpen == true with 0.8 confidence
-          //opposite: if(!r.windowOpen[0.2]) <=> (!r.windowOpen == true)[0.2] <=> (r.windowOpen == false)[0.2] -> r.windowOpen == false with 0.2 confidence
+
+            /**
+                The confidence is related to the value of the overall expression and not only one variable
+                Here, the plain English text expressed by the below if condition is: if r.windowOpen is equal to true with
+                a confidence of at least 80%
+
+                Over ways to write the same condition are:
+                    - if((r.windowOpen == true)[0.8])
+                    - if((r.windowOpen == false)[0.2])
+                    - if((!r.windowOpen == true)[0.2])
+                    - if(!r.windowOpen[0.2])
+            **/
+            if(r.windowOpen[0.8]) {
                 oneWindowOpen = oneWindowOpen || r.windowOpen;
                 /**
-                    if oneWindowOpen is a boolean, we loose the uncertainty
+                    boolean oneWindowOpen = oneWindowOpen || r.windowOpen
+                    Semantic:
+                    boolean oneWindowOpen = oneWindowOpen[highest] || r.windowOpen[highest]
                 **/
             }
         }
@@ -21,15 +37,37 @@ class Building {
      op Bernoulli<boolean> heatingWithOpenWindowAndSomeone() {
         for(Room r: rooms) {
             if(r instanceOf Office) {
-                Bernoulli<boolean> riseAlarm = r.windowOpen[0.8] && r.someonePresent[0.9] && heatingSystemOn[0.9] //a bit "artificial"
-                if(riseAlarm[0.65]) { //0.65 = 0.8 * 0.9 * 0.9
+                /*
+                    Lets have:
+                    Bernoulli<boolean> b1 = r.windowOpen && r.someonePresent && heatingSystemOn
+                    Bernoulli<boolean> b2 = r.windowOpen[0.8] && r.someonePresent[0.9] && heatingSystemOn[0.9]
+
+                    b1 and b2 are different.
+
+                    Semantic:
+                        Bernoulli<boolean> b1 = {
+                            value = r.windowOpen.value && r.someonePresent.value && heatingSystemOn.value
+                            uncertainty = r.windowOpen.uncertainty + r.someonePresent.uncertainty + heatingSystemOn.uncertainty
+                        }
+
+                        Bernoulli<boolean> b2 = {
+                            value = r.windowOpen[0.8] && r.someonePresent.value[0.9] && heatingSystemOn.value[0.9]
+                            uncertainty = 1
+                        }
+
+                */
+                Bernoulli<boolean> riseAlarm = r.windowOpen && r.someonePresent && heatingSystemOn
+                if(riseAlarm[0.7]) {
                     sendEmail(r.employees)
                 }
 
                 /*
-                    riseAlarm is between [0.65, 1]
-                    if(riseAlarm[0.9]) {} -> should rise an inconsistency warning
-                    if(riseAlarm[0.4]) {} -> should rise an inconsistency warning
+                    Other possibility:
+                    boolean riseAlarm = r.windowOpen[0.8] && r.someonePresent[0.9] && heatingSystemOn[0.9]
+
+                    if(riseAlarm) {
+                        sendEmail(r.employees)
+                    }
                 */
             }
         }
@@ -37,17 +75,25 @@ class Building {
 }
 
 abstract class Room {
-    Bernoulli<boolean> someonePresent {
-        value = true
-        uncertainty = Bernoulli(0.95)
-    }
+    /**
+        Other ways to write the line (currently, may change):
+            - Bernoulli<boolean> someonePresent = Bernoulli(true, 0.95)
+            - Bernoulli<boolean> someonePresent {
+                  value = true
+                  uncertainty = 0.95
+              }
+            - Bernoulli<boolean> someonePresent {
+                  self.value = true
+                  self.uncertainty = 0.95
+              }
+             - Bernoulli<boolean> someonePresent {
+                  value = true
+                  uncertainty = Bernoulli(0.95)
+              }
+    **/
+    Bernoulli<boolean> someonePresent = (true, 0.95)
 
-    Bernoulli<boolean> windowOpen {
-        self.value = false
-        self.uncertainty = Bernoulli(0.95)
-    }
-
-
+    Bernoulli<boolean> windowOpen = (false, 0.95)
 }
 
 class Office extends Room {
