@@ -15,7 +15,7 @@ class Room {
             Defines how the uncertainty is computed when a new value is received
             Assumption: sensorTemperature is received at the same time
         **/
-        @trigger((onUpdate(self.value) && onUpdate(self.parent.sensorTemperature))[5 min])
+
         uncertainty = Gaussian(self.value, accuracy(self.value, self.parent.sensorTemperature)) + staticKnowledge(timestamp)
 
         staticKnowledge(Time current) {
