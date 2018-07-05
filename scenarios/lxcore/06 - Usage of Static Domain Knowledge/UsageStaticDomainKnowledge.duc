@@ -16,9 +16,9 @@ class Room {
             Assumption: sensorTemperature is received at the same time
         **/
         @trigger((onUpdate(self.value) && onUpdate(self.parent.sensorTemperature))[5 min])
-        uncertainty = Gaussian(self.value, accuracy(self.value, self.parent.sensorTemperature)) + getProfile(timestamp)
+        uncertainty = Gaussian(self.value, accuracy(self.value, self.parent.sensorTemperature)) + staticKnowledge(timestamp)
 
-        getProfile(Time current) {
+        staticKnowledge(Time current) {
             if (season(current) == Season.SUMMER) {
                 if( current < Time.Noon) {
                     return Gaussian(18, 0.5)
