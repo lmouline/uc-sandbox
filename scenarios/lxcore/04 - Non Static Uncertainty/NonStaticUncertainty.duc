@@ -5,9 +5,13 @@ class Building {
 }
 
 class Room {
-    Gaussian<double> temperature {
-        double precision = 0.6
+    double sensorTemperature
 
+    Gaussian<double> temperature {
+        /**
+            Defines how the uncertainty is computed when a new value is received
+            Assumption: sensorTemperature is received at the same time
+        **/
         uncertainty = (self.value, accuracy(self.value, self.parent.sensorTemperature))
 
         // Source: http://www.eenewseurope.com/sites/default/files/images/01-edit-photos-uploads/2011/2011-06-june/2011-06-24-mlx90614.jpg
@@ -61,21 +65,4 @@ class Room {
                  return accuracyMatrix[ligneIdx][colonneIdx];
              }
     }
-
-    double sensorTemperature
 }
-
-
-/**
-Meta datatype Gaussian<T> {
-    attribute T mean
-    attribute double std
-
-    uncertainty = Gaussian(mean, std)
-}
-
-Meta datatype UReal extends Gaussian<Real> {
-    attribute double precision
-    self.std = precision
-}
-**/
