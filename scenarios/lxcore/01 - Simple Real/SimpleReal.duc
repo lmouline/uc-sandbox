@@ -66,6 +66,10 @@ class Room {
     /**
         UReal type comes from the Antonio V. works
     **/
+    /**
+        Warning: In Scala '_' as a different semantic
+        It could introduce some confusion
+    **/
     UReal temperature  = (_, 0.6)  // Gaussian<Real> wrapper
     // UReal temperature  = UReal(_, 0.6)
     // var temperature  = UReal(_, 0.6)
