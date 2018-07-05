@@ -20,8 +20,16 @@ class Room {
         uncertainty = (self.value, accuracy(self.value, self.parent.sensorTemperature))
 
         // Source: http://www.eenewseurope.com/sites/default/files/images/01-edit-photos-uploads/2011/2011-06-june/2011-06-24-mlx90614.jpg
+
+        /**
+            Need improvement
+            The language should allow easy definition of such a matrix
+            The access should mot be manually implemented by the developer
+
+            Suggestion: used named dimension
+        **/
         const double[][] accuracyMatrix = {{-40, -20, 50,70,150}
-            -40=>{4,4,4,4,4},
+                                           -40=>{4,4,4,4,4},
                                            -20=>{4,4,3,3,3},
                                            0=>{4,3,2,2,2},
                                            30=>{3,2,1,1,2},
