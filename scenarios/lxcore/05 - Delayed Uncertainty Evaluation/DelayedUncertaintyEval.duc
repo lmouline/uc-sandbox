@@ -4,17 +4,28 @@ class Building {
     Room rooms[0..*]
 }
 
-class Room {
-    double sensorTemperature
+/**
+    To compute the uncertainty of Room.temperature, we need the value of Room.sensorTemperature and the value of Room.temperature
+    However, these values might be received at different time.
+    As a consequence, the uncertainty should not be evaluated when the value is received but when both value are received
+        - Either we have to write this code inside the language (or "an abstraction of the code") (1)
+        - or we assume that it is done externally (2)
+            - we just need to map both (2.1)
+            - or we assume that there is an external process that manage this
 
-    /**
-        UReal temperature(precision: accuracy(value,sensorTemperature))
-    **/
+    (1) It means that the model contains both the data model + processing
+**/
+class Room {
+    double sensorTemperature {
+        Time timestamp
+    }
+
     Gaussian<double> temperature {
         /**
             Defines how the uncertainty is computed when a new value is received
             Assumption: sensorTemperature is received at the same time
         **/
+        @trigger((onUpdate(self.value) && onUpdate(self.parent.sensorTemperature))[5 min])
         uncertainty = (self.value, accuracy(self.value, self.parent.sensorTemperature))
 
         // Source: http://www.eenewseurope.com/sites/default/files/images/01-edit-photos-uploads/2011/2011-06-june/2011-06-24-mlx90614.jpg

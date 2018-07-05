@@ -48,14 +48,10 @@ class Building {
 }
 
 class Room {
-    Gaussian<double> temperature {
-        Time timeValidity = 5ms
-        Time timeStamp
-        double precision
+    TemporalUReal<double> temperature {
+        self.timeValidity = 5ms
 
-        uncertainty = Gaussian(self.value, precision)
-
-        getUncertainty(Time current) { //function called to resolved uncertainty
+         getUncertainty(Time current) { //function called to resolved uncertainty
             if(current <= temperatureTimeStamp+temperatureTimeValidity) {
                 return self.uncertainty;
             }
@@ -64,3 +60,22 @@ class Room {
         }
     }
 }
+
+/**
+Meta datatype Gaussian<T> {
+    attribute T mean
+    attribute double std
+
+    uncertainty = Gaussian(mean, std)
+}
+
+Meta datatype UReal extends Gaussian<Real> {
+    attribute double precision
+    self.std = precision
+}
+
+Meta datatype TemporalUReal extends UReal {
+    attribute Time timeValidity
+    attribute Time timeStamp
+}
+**/

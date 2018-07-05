@@ -4,18 +4,47 @@ class Building {
     Room rooms[0..*]
 }
 
-class Room {
-    double sensorTemperature
 
-    /**
-        UReal temperature(precision: accuracy(value,sensorTemperature))
-    **/
-    Gaussian<double> temperature {
+class Room {
+    double sensorTemperature {
+        Time timestamp
+    }
+
+    TemporalGaussian<double> temperature {
         /**
             Defines how the uncertainty is computed when a new value is received
             Assumption: sensorTemperature is received at the same time
         **/
-        uncertainty = (self.value, accuracy(self.value, self.parent.sensorTemperature))
+        @trigger((onUpdate(self.value) && onUpdate(self.parent.sensorTemperature))[5 min])
+        uncertainty = Gaussian(self.value, accuracy(self.value, self.parent.sensorTemperature)) + getProfile(timestamp)
+
+        getProfile(Time current) {
+            if (season(current) == Season.SUMMER) {
+                if( current < Time.Noon) {
+                    return Gaussian(18, 0.5)
+                } else {
+                    return Gaussian(25, 0.5)
+                }
+            } else if(season(current) == Season.WINTER) {
+                if( current < Time.Noon) {
+                    return Gaussian(0, 0.4)
+                } else {
+                    return Gaussian(10, 0.6)
+                }
+            } else if(season(current) == Season.SPRING) {
+                if( current < Time.Noon) {
+                   return Gaussian(12, 0.3)
+                } else {
+                   return Gaussian(18, 0.5)
+                }
+            } else {
+                if( current < Time.Noon) {
+                   return Gaussian(5, 0.5)
+                } else {
+                   return Gaussian(12, 0.5)
+                }
+            }
+        }
 
         // Source: http://www.eenewseurope.com/sites/default/files/images/01-edit-photos-uploads/2011/2011-06-june/2011-06-24-mlx90614.jpg
         const double[][] accuracyMatrix = {{4,4,4,4,4},
