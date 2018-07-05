@@ -9,7 +9,7 @@ class Building {
     * An example of binary operations (AND , OR) over uncertain types
     **/
     op Bernoulli<boolean> heatingWithOpenWindow() {
-        Bernoulli<boolean> oneWindowOpen = false // implicit conversion to Bernoulli(false, X)
+        Bernoulli<boolean> oneWindowOpen = false // implicit conversion to Bernoulli(false, 1)
         for(Room r: rooms) {
 
             /**
@@ -92,9 +92,10 @@ abstract class Room {
                   uncertainty = Bernoulli(0.95)
               }
     **/
-    Bernoulli<boolean> someonePresent := (true, 0.95)
+    Bernoulli<boolean> someonePresent = (true, 0.95)
 
-    Bernoulli<boolean> windowOpen := (false, 0.95)
+    Bernoulli<boolean> windowOpen = new Bernoulli<boolean>(false, 0.95)
+    var windowOpen = new Bernoulli<boolean>(false, 0.95)
 }
 
 class Office extends Room {
