@@ -25,7 +25,11 @@ class Room {
             Defines how the uncertainty is computed when a new value is received
             Assumption: sensorTemperature is received at the same time
         **/
-        @trigger((onUpdate(self.value) && onUpdate(self.parent.sensorTemperature))[5 min])
+        /**
+            Triggering is very hard complex
+            Better to compute the uncertainty on demand (when it is accessed)
+        **/
+        //@trigger((onUpdate(self.value) && onUpdate(self.parent.sensorTemperature))[5 min])
         uncertainty = (self.value, accuracy(self.value, self.parent.sensorTemperature))
 
         // Source: http://www.eenewseurope.com/sites/default/files/images/01-edit-photos-uploads/2011/2011-06-june/2011-06-24-mlx90614.jpg
