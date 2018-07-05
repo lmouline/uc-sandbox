@@ -24,11 +24,7 @@ class Building {
                             .post(nbValues > 0.9*roomsLength)
             **/
             for(Room r: rooms) {
-                /**
-                    WARNING: Usually double cannot be compared with a null value
-                    Either we will be to modify the semantic to allow this or we will need to find a trick like adding an "exists()" method
-                **/
-                if(r.temperature[0.9] != null) { //there is a value with more than 90% of confidence
+                 if(exists(r.temperature, 0.9)) { //there is a value with more than 90% of confidence
                     sum += r.temperature //return the value with the highest confidence
                     nbValues++
                 }
@@ -70,7 +66,10 @@ class Room {
     /**
         UReal type comes from the Antonio V. works
     **/
-    UReal temperature(precision: 0.6)
+    UReal temperature  = (_, 0.6)  // Gaussian<Real> wrapper
+    // UReal temperature  = UReal(_, 0.6)
+    // var temperature  = UReal(_, 0.6)
+    // var temperature  = UReal(_, 0.6)
 }
 
 

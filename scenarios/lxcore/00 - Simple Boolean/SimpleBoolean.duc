@@ -1,3 +1,4 @@
+
 package simple.boolean
 
 class Building {
@@ -27,7 +28,7 @@ class Building {
                 /**
                     boolean oneWindowOpen = oneWindowOpen || r.windowOpen
                     Semantic:
-                    boolean oneWindowOpen = oneWindowOpen[highest] || r.windowOpen[highest]
+                    boolean oneWindowOpen = (oneWindowOpen || r.windowOpen) [highest]
                 **/
             }
         }
@@ -39,8 +40,8 @@ class Building {
             if(r instanceOf Office) {
                 /*
                     Lets have:
-                    Bernoulli<boolean> b1 = r.windowOpen && r.someonePresent && heatingSystemOn
-                    Bernoulli<boolean> b2 = r.windowOpen[0.8] && r.someonePresent[0.9] && heatingSystemOn[0.9]
+                    Bernoulli<boolean> b1 = r.windowOpen && r.someonePresent && heatingSystemOn  \\
+                    Bernoulli<boolean> b2 = ( Bernoulli<boolean>) (r.windowOpen[0.8] && r.someonePresent[0.9] && heatingSystemOn[0.9])\\--> for casting, see lines54-57
 
                     b1 and b2 are different.
 
@@ -91,9 +92,9 @@ abstract class Room {
                   uncertainty = Bernoulli(0.95)
               }
     **/
-    Bernoulli<boolean> someonePresent = (true, 0.95)
+    Bernoulli<boolean> someonePresent := (true, 0.95)
 
-    Bernoulli<boolean> windowOpen = (false, 0.95)
+    Bernoulli<boolean> windowOpen := (false, 0.95)
 }
 
 class Office extends Room {
@@ -119,9 +120,6 @@ Meta datatype UReal extends Gaussian<Real> {
     self.std = precision
 }
 **/
-
-
-
 
 
 
